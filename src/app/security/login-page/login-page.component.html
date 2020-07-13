@@ -1,7 +1,8 @@
+<h2>Login</h2>
 <form #loginForm="ngForm" (submit)="onSubmit(loginForm)">
-    <div>
-      <label for="name">Name</label>
-      <input
+    <mat-form-field>
+      <mat-label for="name">Name</mat-label>
+      <input matInput
         type="text"
         name="name"
         id="name"
@@ -12,10 +13,10 @@
       <p *ngIf="nameField.hasError('required') && nameField.touched">
         Name is required
       </p>
-    </div>
-    <div>
-      <label for="password">Password</label>
-      <input
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label for="password">Password</mat-label>
+      <input matInput
         type="password"
         name="password"
         id="passwrod"
@@ -26,12 +27,12 @@
       <p *ngIf="passwordField.hasError('required') && passwordField.touched">
         Password is required
       </p>
-    </div>
+    </mat-form-field>
 
     <div>
-      <button type="submit" [disabled]="loginForm.invalid">Log in</button>
-      <p *ngIf="loginError">
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Log in</button>
+      <mat-error *ngIf="loginError">
         Unable to log in. See the log for more information.
-      </p>
+      </mat-error>
     </div>
 </form>

@@ -1,0 +1,83 @@
+<h2>Report a new issue</h2>
+<form novalidate
+      (ngSubmit)="reportIssue()"
+      [formGroup]="newIssueForm">
+    <div>
+        <label for="descriptionId">Description</label>
+        <input
+            id="descriptionId"
+            type="text"
+            placeholder="Description (required)"
+            formControlName="description"
+            [ngClass]="{ 'is-invalid': descriptionMessage }" />
+        <span class="invalid-feedback">
+            {{ descriptionMessage }}
+        </span>
+<!--
+        <label for="imageUrlId">Image URL</label>
+        <input
+            id="imageUrlId"
+            type="text"
+            placeholder="Image URL"
+            formControlName="imageUrl"
+            [ngClass]="{ 'is-invalid': descriptionMessage }" />
+        <span class="invalid-feedback">
+            {{ descriptionMessage }}
+        </span>
+-->
+        <div formArrayName="additionalImageUrls">
+            <div *ngFor="let additionalImageUrl of additionalImageUrls.controls; let i=index">
+                <div>
+                    <label attr.for="{{ 'additionalImageUrl' + i }}">Additional Image URL</label>
+                    <input
+                        id="{{ 'additionalImageUrl' + i }}"
+                        type="text"
+                        placeholder="Additional ImageUrl URL"
+                        [formControlName]="i"
+                        [ngClass]="{ 'is-invalid': imageUrlMessage }" />
+                </div>
+            </div>
+            <span class="invalid-feedback">
+                {{ imageUrlMessage }}
+            </span>
+        </div>
+        <button
+            type="button"
+            [disabled]="!additionalImageUrls.valid"
+            (click)="addImageUrl()">
+            Add additional image
+        </button>
+
+        <label for="typeId">Type</label>
+        <select
+            id="typeId"
+            formControlName="issueType">
+            <option *ngFor="let issueType of issueTypes" [ngValue]="issueType.href">
+                {{ issueType.name }}
+            </option>
+        </select>
+
+        <label for="tagsId">Tags</label>
+        <input
+            id="tagsId"
+            type="text"
+            placeholder="tags???"
+            formControlName="tags"
+            [ngClass]="{ 'is-invalid': tagsMessage }" />
+        <span class="invalid-feedback">
+            {{ tagsMessage }}
+        </span>
+
+        <button
+            type="submit"
+            [title]="newIssueForm.valid ? 'Submit' : 'Please complete the form'"
+            [disabled]="!newIssueForm.valid">
+            Register
+        </button>
+    </div>
+
+    <app-issue-map
+        (location)="onLocationSet">
+    </app-issue-map>
+
+</form>

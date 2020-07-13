@@ -4,25 +4,43 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { ApiTokenInterceptorService } from "./api/api-token-interceptor.service";
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
-import { MatSliderModule } from '@angular/material/slider';
 import { SecurityModule } from './security/security.module';
 import { DummyPageComponent } from './dummy-page/dummy-page.component';
+import { MenuComponent } from './menu/menu.component';
+import { IssueMapComponent } from './issue/issue-map/issue-map.component';
+import { IssueNewComponent } from './issue/issue-new/issue-new.component';
+import { IssueListComponent } from './issue/issue-list/issue-list.component';
+
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DummyPageComponent
+    DummyPageComponent,
+    MenuComponent,
+    IssueMapComponent,
+    IssueNewComponent,
+    IssueListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     SecurityModule,
-    MatSliderModule
+    LeafletModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatTableModule,
   ],
   providers: [
     {
