@@ -5,6 +5,9 @@ import { Point } from 'src/app/models/issue';
 import { IssueService } from 'src/app/api/services/issue.service';
 import { IssueTypeService } from 'src/app/api/services/issue-type.service';
 import { IssueType } from 'src/app/models/issue-type';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-issue-new',
@@ -18,9 +21,16 @@ export class IssueNewComponent implements OnInit {
   issueTypes: IssueType[];
 
   errorMessage: string;
-  descriptionMessage: string[];
-  imageUrlMessage: string[];
-  tagsMessage: string[];
+  descriptionMessage: string;
+  imageUrlMessage: string;
+  issueTypeMessage: string;
+  tagsMessage: string;
+
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(private formBuilder: FormBuilder,
               private issueTypeService: IssueTypeService,
@@ -34,10 +44,42 @@ export class IssueNewComponent implements OnInit {
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
       issueType:    ['', [Validators.required]],
       //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
-      additionalImageUrls:  this.formBuilder.array([this.buildImageUrl()]),
+      imageUrls:  this.formBuilder.array([this.buildImageUrl()]),
       tags:         ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]]
       //roles:      [{value: ['citizen'], disabled: true}]
     });
+
+    this.newIssueForm.get('issueType').valueChanges.subscribe(item => {
+      this.issueTypes = item.issueTypes
+    });
+
+    const descriptionControl = this.newIssueForm.get('description');
+    descriptionControl.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(
+      value => this.setDescriptionMessage(descriptionControl)
+    );
+
+    const issueTypeControl = this.newIssueForm.get('issueType');
+    issueTypeControl.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(
+      value => this.setIssueTypeMessage(issueTypeControl)
+    );
+
+    const imageUrlsControl = this.newIssueForm.get('imageUrls');
+    imageUrlsControl.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(
+      value => this.setImageUrlsMessage(imageUrlsControl)
+    );
+
+    const tagsControl = this.newIssueForm.get('tags');
+    tagsControl.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(
+      value => this.setTagsMessage(tagsControl)
+    );
   }
 
   buildImageUrl(): FormControl {
@@ -50,12 +92,12 @@ export class IssueNewComponent implements OnInit {
     return <FormControl>this.newIssueForm.get('imageUrl');
   }
 
-  get additionalImageUrls(): FormArray {
-    return <FormArray>this.newIssueForm.get('additionalImageUrls');
+  get imageUrls(): FormArray {
+    return <FormArray>this.newIssueForm.get('imageUrls');
   }
 
   addImageUrl(): void {
-    this.additionalImageUrls.push(this.buildImageUrl());
+    this.imageUrls.push(this.buildImageUrl());
   }
 
   getAllIssueTypes(): void {
@@ -71,7 +113,7 @@ export class IssueNewComponent implements OnInit {
     maxlength: 'The description must contain at most 1000 characters.'
   };
 
-  private issueTypeHrefValidationMessages = {
+  private issueTypeValidationMessages = {
     required: 'Please select a type for the issue.'
   };
 
@@ -80,41 +122,11 @@ export class IssueNewComponent implements OnInit {
     pattern: 'The image URL is not valid.'
   };
 
-  private tagValidationMessages = {
-    //required: 'Please enter a firstname.',
+  private tagsValidationMessages = {
+    required: 'Please enter at least one tag.',
     minlength: 'Each tag must contain at least 2 characters.',
     maxlength: 'Each tag must contain at most 25 characters.'
   };
-
-/*   const descriptionControl = this.newIssueForm.get('description');
-  descriptionControl.valueChanges.pipe(
-    debounceTime(1000)
-  ).subscribe(
-    value => this.setDescriptionMessage(descriptionControl)
-  );
-
-  const issueTypeHrefControl = this.newIssueForm.get('issueType');
-  issueTypeHrefControl.valueChanges.pipe(
-    debounceTime(1000)
-  ).subscribe(
-    value => this.setIssueTypeHrefMessage(issueTypeHrefControl)
-  );
-
-  const imageControl = this.newIssueForm.get('images.0');
-  imageControl.valueChanges.pipe(
-    debounceTime(1000)
-  ).subscribe(
-    value => this.setImageUrlMessage(imageControl)
-  );
-
-  setDescriptionMessage(c: AbstractControl): void {
-    this.descriptionMessage = '';
-    if((c.touched || c.dirty) && c.errors) {
-      console.log(c.errors);
-      this.descriptionMessage = Object.keys(c.errors).map(
-        key => this.descriptionValidationMessages[key]).join(' ');
-    }
-  } */
 
 /*   setNotification(notifyVia: string): void {
     //TODO
@@ -122,6 +134,36 @@ export class IssueNewComponent implements OnInit {
 
   //registerForm.get('firstname').valid
   //registerForm.get('passwordGroup.password').valid
+
+  get tags() {
+    return this.newIssueForm.get('tags');
+  }
+
+  addTag(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our tag
+    if ((value || '').trim()) {
+      this.tags.setValue([...this.tags.value, value.trim()]);
+      this.tags.updateValueAndValidity();
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  removeTag(tag: string): void {
+    const index = this.tags.value.indexOf(tag);
+
+    if (index >= 0) {
+      this.tags.value.splice(index, 1);
+      this.tags.updateValueAndValidity();
+    }
+  }
+
 
   onMapClicked(){
     this.issueNewRequest.location = new Point([0, 0]);
@@ -134,9 +176,9 @@ export class IssueNewComponent implements OnInit {
         this.issueNewRequest.issueTypeHref = null ;
         //this.issueNewRequest.location = new Point([0, 0]);
         this.issueNewRequest.description = this.newIssueForm.get('description').value;
-        this.issueNewRequest.imageUrl = this.newIssueForm.get('additionalImageUrls').value[0] ;
-        this.issueNewRequest.additionalImageUrls = this.newIssueForm.get('additionalImageUrls').value.slice(1) ;
-        this.issueNewRequest.tags = null ;
+        this.issueNewRequest.imageUrl = this.newIssueForm.get('imageUrls').value[0] ;
+        this.issueNewRequest.additionalImageUrls = this.newIssueForm.get('imageUrls').value.slice(1) ;
+        this.issueNewRequest.tags = this.tags.value ;
 
         //this.issueNewRequest.state = "new";
         //this.issueNewRequest.createdAt = null ;
@@ -165,4 +207,57 @@ export class IssueNewComponent implements OnInit {
   onLocationSet(location: [number, number]): void {
     this.issueNewRequest.location = new Point(location);
   }
+
+  setDescriptionMessage(c: AbstractControl): void {
+    this.descriptionMessage = '';
+    if((c.touched || c.dirty) && c.errors) {
+      console.log(c.errors);
+      this.descriptionMessage = Object.keys(c.errors).map(
+        key => this.descriptionValidationMessages[key]).join(' ');
+    }
+  }
+
+  setIssueTypeMessage(c: AbstractControl): void {
+    this.issueTypeMessage = '';
+    if((c.touched || c.dirty) && c.errors) {
+      console.log(c.errors);
+      this.issueTypeMessage = Object.keys(c.errors).map(
+        key => this.issueTypeValidationMessages[key]).join(' ');
+    }
+  }
+
+  setImageUrlsMessage(c: AbstractControl): void {
+    this.imageUrlMessage = '';
+    if((c.touched || c.dirty) && c.errors) {
+      console.log(c.errors);
+      this.imageUrlMessage = Object.keys(c.errors).map(
+        key => this.imageUrlValidationMessages[key]).join(' ');
+    }
+  }
+
+  setTagsMessage(c: AbstractControl): void {
+    this.tagsMessage = '';
+    if((c.touched || c.dirty) && c.errors) {
+      console.log(c.errors);
+      this.tagsMessage = Object.keys(c.errors).map(
+        key => this.tagsValidationMessages[key]).join(' ');
+    }
+  }
+
+/*
+  const issueTypeHrefControl = this.newIssueForm.get('issueType');
+  issueTypeHrefControl.valueChanges.pipe(
+    debounceTime(1000)
+  ).subscribe(
+    value => this.setIssueTypeHrefMessage(issueTypeHrefControl)
+  );
+
+  const imageControl = this.newIssueForm.get('images.0');
+  imageControl.valueChanges.pipe(
+    debounceTime(1000)
+  ).subscribe(
+    value => this.setImageUrlMessage(imageControl)
+  );
+
+   */
 }

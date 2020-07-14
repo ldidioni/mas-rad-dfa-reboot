@@ -2,82 +2,103 @@
 <form novalidate
       (ngSubmit)="reportIssue()"
       [formGroup]="newIssueForm">
-    <div>
-        <label for="descriptionId">Description</label>
-        <input
+    <mat-form-field>
+        <mat-label for="descriptionId">Description</mat-label>
+        <input matInput
             id="descriptionId"
             type="text"
             placeholder="Description (required)"
             formControlName="description"
             [ngClass]="{ 'is-invalid': descriptionMessage }" />
-        <span class="invalid-feedback">
+        <mat-error>
             {{ descriptionMessage }}
-        </span>
+        </mat-error>
+    </mat-form-field>
 <!--
-        <label for="imageUrlId">Image URL</label>
-        <input
-            id="imageUrlId"
-            type="text"
-            placeholder="Image URL"
-            formControlName="imageUrl"
-            [ngClass]="{ 'is-invalid': descriptionMessage }" />
-        <span class="invalid-feedback">
-            {{ descriptionMessage }}
-        </span>
+    <label for="imageUrlId">Image URL</label>
+    <input
+        id="imageUrlId"
+        type="text"
+        placeholder="Image URL"
+        formControlName="imageUrl"
+        [ngClass]="{ 'is-invalid': descriptionMessage }" />
+    <span class="invalid-feedback">
+        {{ descriptionMessage }}
+    </span>
 -->
-        <div formArrayName="additionalImageUrls">
-            <div *ngFor="let additionalImageUrl of additionalImageUrls.controls; let i=index">
-                <div>
-                    <label attr.for="{{ 'additionalImageUrl' + i }}">Additional Image URL</label>
-                    <input
-                        id="{{ 'additionalImageUrl' + i }}"
-                        type="text"
-                        placeholder="Additional ImageUrl URL"
-                        [formControlName]="i"
-                        [ngClass]="{ 'is-invalid': imageUrlMessage }" />
-                </div>
-            </div>
-            <span class="invalid-feedback">
-                {{ imageUrlMessage }}
-            </span>
+    <div formArrayName="imageUrls">
+        <div *ngFor="let imageUrl of imageUrls.controls; let i=index">
+            <mat-form-field>
+                <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
+                <input matInput
+                    id="{{ 'ImageUrl' + i }}"
+                    type="text"
+                    placeholder="ImageUrl URL"
+                    [formControlName]="i"
+                    [ngClass]="{ 'is-invalid': imageUrlMessage }" />
+            </mat-form-field>
         </div>
-        <button
-            type="button"
-            [disabled]="!additionalImageUrls.valid"
-            (click)="addImageUrl()">
-            Add additional image
-        </button>
+        <mat-error>
+            {{ imageUrlMessage }}
+        </mat-error>
+    </div>
+    <button mat-raised-button
+        type="button"
+        [disabled]="!imageUrls.valid"
+        (click)="addImageUrl()">
+        Add image
+    </button>
 
-        <label for="typeId">Type</label>
-        <select
+    <mat-form-field>
+        <mat-label for="typeId">Type</mat-label>
+        <mat-select
             id="typeId"
             formControlName="issueType">
-            <option *ngFor="let issueType of issueTypes" [ngValue]="issueType.href">
+            <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.href">
                 {{ issueType.name }}
-            </option>
-        </select>
+            </mat-option>
+        </mat-select>
+        <mat-error>
+            {{ issueTypeMessage }}
+        </mat-error>
+    </mat-form-field>
 
-        <label for="tagsId">Tags</label>
-        <input
-            id="tagsId"
-            type="text"
-            placeholder="tags???"
-            formControlName="tags"
-            [ngClass]="{ 'is-invalid': tagsMessage }" />
-        <span class="invalid-feedback">
+    <mat-form-field>
+        <mat-chip-list #chipList formControlName="tags">
+            <mat-label for="tagsId">Tags</mat-label>
+            <mat-chip *ngFor="let tag of tags.value" [selectable]="selectable"
+                [removable]="removable" (removed)="removeTag(tag)">
+                {{tag}}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+                placeholder="New Tag..."
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addTag($event)"
+                id="tagsId"
+                [ngClass]="{ 'is-invalid': tagsMessage }" />
+        </mat-chip-list>
+        <mat-error>
             {{ tagsMessage }}
-        </span>
+        </mat-error>
+    </mat-form-field>
 
-        <button
-            type="submit"
-            [title]="newIssueForm.valid ? 'Submit' : 'Please complete the form'"
-            [disabled]="!newIssueForm.valid">
-            Register
-        </button>
-    </div>
+    <button
+        mat-raised-button color="primary"
+        type="submit"
+        [title]="newIssueForm.valid ? 'Submit' : 'Please complete the form'"
+        [disabled]="!newIssueForm.valid">
+        Register
+    </button>
 
     <app-issue-map
         (location)="onLocationSet">
     </app-issue-map>
 
 </form>
+
+<p>
+    Form value: {{ newIssueForm.value | json }}
+</p>

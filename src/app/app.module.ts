@@ -19,6 +19,13 @@ import { IssueListComponent } from './issue/issue-list/issue-list.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+
+
 
 @NgModule({
   declarations: [
@@ -38,9 +45,14 @@ import { MatTableModule } from '@angular/material/table';
     ReactiveFormsModule,
     SecurityModule,
     LeafletModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatPaginatorModule,
     MatSelectModule,
     MatTableModule,
+    MatChipsModule,
+    MatIconModule
   ],
   providers: [
     {
