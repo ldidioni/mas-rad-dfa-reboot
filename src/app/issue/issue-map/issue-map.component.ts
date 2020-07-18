@@ -9,7 +9,7 @@ import { Point } from 'src/app/models/issue';
   styleUrls: ['./issue-map.component.scss']
 })
 export class IssueMapComponent implements OnInit {
-
+/*
   map: Map;
   mapOptions: MapOptions;
   @Input() mapPoints: Point[];
@@ -35,13 +35,13 @@ export class IssueMapComponent implements OnInit {
       marker([ 46.784992, 6.652267 ], { icon: defaultIcon })
     ];
    }
-
+*/
   ngOnInit(): void {
-    this.mapPoints = [];
-
+   /* this.mapPoints = [];
+    */
   }
 
-
+/*
 
   ngOnChanges() {
     this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
@@ -58,7 +58,7 @@ export class IssueMapComponent implements OnInit {
             },
             //error: err => this.errorMessage = err
       });
-  } */
+  }
 
   onMapReady(map: Map) {
     this.map = map;
@@ -97,5 +97,5 @@ export class IssueMapComponent implements OnInit {
     //this.mapMarkers.push(newMarker);
     //this.location.emit(e.latLng);
   }
-
+*/
 }

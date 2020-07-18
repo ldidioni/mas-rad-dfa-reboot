@@ -10,8 +10,8 @@ import { Issue, Point } from 'src/app/models/issue';
 })
 export class IssueListComponent implements OnInit {
 
-  issues: Issue[];
-  issuePoints: Point[];
+  issues: Issue[] = [];
+  issuePoints: Point[] = [];
   displayedColumns: string[] = ['id', 'state', 'description', 'createdAt', 'updatedAt'];
 
   constructor(private issueService: IssueService) { }

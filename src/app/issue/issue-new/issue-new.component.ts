@@ -49,9 +49,9 @@ export class IssueNewComponent implements OnInit {
       //roles:      [{value: ['citizen'], disabled: true}]
     });
 
-    this.newIssueForm.get('issueType').valueChanges.subscribe(item => {
+/*     this.newIssueForm.get('issueType').valueChanges.subscribe(item => {
       this.issueTypes = item.issueTypes
-    });
+    }); */
 
     const descriptionControl = this.newIssueForm.get('description');
     descriptionControl.valueChanges.pipe(
@@ -164,16 +164,11 @@ export class IssueNewComponent implements OnInit {
     }
   }
 
-
-  onMapClicked(){
-    this.issueNewRequest.location = new Point([0, 0]);
-  }
-
   reportIssue(): void {
     if (this.newIssueForm.valid) {
       if (this.newIssueForm.dirty) {
 
-        this.issueNewRequest.issueTypeHref = null ;
+        this.issueNewRequest.issueTypeHref = this.newIssueForm.get('issueType').value;
         //this.issueNewRequest.location = new Point([0, 0]);
         this.issueNewRequest.description = this.newIssueForm.get('description').value;
         this.issueNewRequest.imageUrl = this.newIssueForm.get('imageUrls').value[0] ;
@@ -184,6 +179,8 @@ export class IssueNewComponent implements OnInit {
         //this.issueNewRequest.createdAt = null ;
         //this.issueNewRequest.creatorHref = me.href;
         //this.issueNewRequest.imageUrl = this.newIssueForm.get(this.additionalImageUrls.get('0.imageUrl'))?.value;
+
+        console.log(this.issueNewRequest);
 
         this.issueService.createIssue(this.issueNewRequest)
           .subscribe({
@@ -204,8 +201,9 @@ export class IssueNewComponent implements OnInit {
     //this.router.navigate(['/issues']);
   }
 
-  onLocationSet(location: [number, number]): void {
-    this.issueNewRequest.location = new Point(location);
+  onLocationSet($event): void {
+    console.log($event);
+    this.issueNewRequest.location = new Point($event);
   }
 
   setDescriptionMessage(c: AbstractControl): void {

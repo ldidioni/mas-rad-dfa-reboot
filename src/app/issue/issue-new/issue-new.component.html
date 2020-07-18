@@ -93,11 +93,17 @@
         Register
     </button>
 
-    <app-issue-map
+  <!--  <app-issue-map
         (location)="onLocationSet">
-    </app-issue-map>
+    </app-issue-map>-->
+
+    <app-map 
+        [mapPoints]="[]"
+        (location)="onLocationSet($event)"
+    ></app-map>
 
 </form>
+
 
 <p>
     Form value: {{ newIssueForm.value | json }}

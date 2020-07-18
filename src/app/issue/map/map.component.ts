@@ -1,12 +1,16 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
+import { Point } from 'src/app/models/issue';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnDestroy, AfterViewInit {
+
+  @Input() mapPoints: Point[] = [];;
+  @Output() location = new EventEmitter<[number, number]>();
 
   map;
 
@@ -24,8 +28,20 @@ export class MapComponent implements AfterViewInit {
 
   constructor() { }
 
+  ngOnDestroy(): void {
+    this.map.remove();
+  }
+
   ngAfterViewInit(): void {
     this.createMap();
+  }
+
+  ngOnChanges() {
+    this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
+  }
+
+  buildMarker(point: Point): L.Marker<any> {
+    return L.marker(L.latLng([point.coordinates[1],point.coordinates[0]]), { icon: this.smallIcon });
   }
 
   createMap() {
@@ -48,13 +64,43 @@ export class MapComponent implements AfterViewInit {
 
     mainLayer.addTo(this.map);
 
-    const description = 'bla';
-    this.addMarker(yverdon, description);
-  }
+    //const description = 'bla';
+    //this.addMarker(yverdon, description);
 
-  addMarker(coords, text) {
-    const marker = L.marker([coords.lat, coords.lng],
-      { icon: this.smallIcon });
-    marker.addTo(this.map).bindPopup(text);
+    this.map.on("click", (e: L.LeafletMouseEvent) => {
+      const marker = L.marker([e.latlng.lat, e.latlng.lng],
+        { icon: this.smallIcon });
+      marker.addTo(this.map).bindPopup('blabla');
+      this.location.emit([e.latlng.lng, e.latlng.lat]);
+    });
   }
 }
+
+/*
+    var arrayOfLatLngs = [];
+    var _this = this;
+
+    // setup a marker group
+    var markers = L.markerClusterGroup();
+
+    events.forEach(function (event) {
+        // setup the bounds
+        arrayOfLatLngs.push(event.location);
+
+        // create the marker
+        var marker = L.marker([event.location.lat, event.location.lng]);
+
+        marker.bindPopup(View(event));
+
+        // add marker
+        markers.addLayer(marker);
+    });
+
+    // add the group to the map
+    // for more see https://github.com/Leaflet/Leaflet.markercluster
+    this.map.addLayer(markers);
+
+    var bounds = new L.LatLngBounds(arrayOfLatLngs);
+    this.map.fitBounds(bounds);
+    this.map.invalidateSize();
+    */

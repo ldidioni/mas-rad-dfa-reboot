@@ -9,6 +9,7 @@ export class IssueNewRequest
     imageUrl?: string;
     additionalImageUrls?: string[];
     tags?: string[];
+    //createdAt?: string;
 
     constructor()
     {
@@ -18,5 +19,6 @@ export class IssueNewRequest
         this.imageUrl = null;
         this.additionalImageUrls = null;
         this.tags = null;
+        //this.createdAt = null;
     }
 }
