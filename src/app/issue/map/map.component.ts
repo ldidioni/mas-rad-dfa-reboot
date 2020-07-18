@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
 import { Point } from 'src/app/models/issue';
+import { GeolocationService } from 'src/app/shared/services/geolocation.service';
 
 @Component({
   selector: 'app-map',
@@ -13,6 +14,7 @@ export class MapComponent implements OnDestroy, AfterViewInit {
   @Output() location = new EventEmitter<[number, number]>();
 
   map;
+  position: Position;
 
   smallIcon = new L.Icon({
     // This define the displayed icon size, in pixel
@@ -26,14 +28,31 @@ export class MapComponent implements OnDestroy, AfterViewInit {
     shadowUrl: 'leaflet/marker-shadow.png'
   });
 
-  constructor() { }
+  constructor(private geolocation: GeolocationService) { 
+    this.geolocation
+      .getCurrentPosition()
+      .then((position) => {
+        this.position = position;
+        console.log(this.position);
+      })
+      .catch((error) => {
+        console.warn('Failed to locate user because', error);
+      });
+  }
 
   ngOnDestroy(): void {
     this.map.remove();
   }
 
   ngAfterViewInit(): void {
-    this.createMap();
+    this.geolocation
+    .getCurrentPosition()
+    .then((position) => {
+      this.position = position;
+      this.createMap(this.position);
+      console.log(this.position);
+    })
+    //this.createMap();
   }
 
   ngOnChanges() {
@@ -44,18 +63,18 @@ export class MapComponent implements OnDestroy, AfterViewInit {
     return L.marker(L.latLng([point.coordinates[1],point.coordinates[0]]), { icon: this.smallIcon });
   }
 
-  createMap() {
-    const yverdon = {
-      lat: 46.778186,
-      lng: 6.641524
+  createMap(position: Position) {
+    const center = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
     };
 
     const zoomLevel = 13;
 
     this.map = L.map('map', {
-      center: [yverdon.lat, yverdon.lng],
+      center: [center.lat, center.lng],
       zoom: zoomLevel
-    });
+    });//.locate({setView: true, maxZoom: 16});
 
     const mainLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       minZoom: 12,
@@ -65,7 +84,7 @@ export class MapComponent implements OnDestroy, AfterViewInit {
     mainLayer.addTo(this.map);
 
     //const description = 'bla';
-    //this.addMarker(yverdon, description);
+    //this.addMarker(center, description);
 
     this.map.on("click", (e: L.LeafletMouseEvent) => {
       const marker = L.marker([e.latlng.lat, e.latlng.lng],
