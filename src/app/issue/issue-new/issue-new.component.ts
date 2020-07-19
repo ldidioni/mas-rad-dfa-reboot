@@ -25,6 +25,7 @@ export class IssueNewComponent implements OnInit {
   imageUrlMessage: string;
   issueTypeMessage: string;
   tagsMessage: string;
+  locationMessage: string;
 
   visible = true;
   selectable = true;
@@ -45,7 +46,8 @@ export class IssueNewComponent implements OnInit {
       issueType:    ['', [Validators.required]],
       //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
       imageUrls:  this.formBuilder.array([this.buildImageUrl()]),
-      tags:         ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]]
+      tags:         ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+      location:    ['', [Validators.required]]
       //roles:      [{value: ['citizen'], disabled: true}]
     });
 
@@ -79,6 +81,13 @@ export class IssueNewComponent implements OnInit {
       debounceTime(1000)
     ).subscribe(
       value => this.setTagsMessage(tagsControl)
+    );
+
+    const locationControl = this.newIssueForm.get('location');
+    locationControl.valueChanges.pipe(
+      debounceTime(1000)
+    ).subscribe(
+      value => this.setLocationMessage(locationControl)
     );
   }
 
@@ -128,6 +137,10 @@ export class IssueNewComponent implements OnInit {
     maxlength: 'Each tag must contain at most 25 characters.'
   };
 
+  private locationValidationMessages = {
+    required: 'Please click the map to set a location for the issue.'
+  };
+
 /*   setNotification(notifyVia: string): void {
     //TODO
   } */
@@ -169,16 +182,11 @@ export class IssueNewComponent implements OnInit {
       if (this.newIssueForm.dirty) {
 
         this.issueNewRequest.issueTypeHref = this.newIssueForm.get('issueType').value;
-        //this.issueNewRequest.location = new Point([0, 0]);
         this.issueNewRequest.description = this.newIssueForm.get('description').value;
         this.issueNewRequest.imageUrl = this.newIssueForm.get('imageUrls').value[0] ;
         this.issueNewRequest.additionalImageUrls = this.newIssueForm.get('imageUrls').value.slice(1) ;
         this.issueNewRequest.tags = this.tags.value ;
-
-        //this.issueNewRequest.state = "new";
-        //this.issueNewRequest.createdAt = null ;
-        //this.issueNewRequest.creatorHref = me.href;
-        //this.issueNewRequest.imageUrl = this.newIssueForm.get(this.additionalImageUrls.get('0.imageUrl'))?.value;
+        this.issueNewRequest.location = this.newIssueForm.get('location').value;
 
         console.log(this.issueNewRequest);
 
@@ -203,7 +211,8 @@ export class IssueNewComponent implements OnInit {
 
   onLocationSet($event): void {
     console.log($event);
-    this.issueNewRequest.location = new Point($event);
+    this.newIssueForm.get('location').setValue(new Point($event));
+    //this.issueNewRequest.location = new Point($event);
   }
 
   setDescriptionMessage(c: AbstractControl): void {
@@ -239,6 +248,15 @@ export class IssueNewComponent implements OnInit {
       console.log(c.errors);
       this.tagsMessage = Object.keys(c.errors).map(
         key => this.tagsValidationMessages[key]).join(' ');
+    }
+  }
+
+  setLocationMessage(c: AbstractControl): void {
+    this.locationMessage = '';
+    if((c.touched || c.dirty) && c.errors) {
+      console.log(c.errors);
+      this.locationMessage = Object.keys(c.errors).map(
+        key => this.locationValidationMessages[key]).join(' ');
     }
   }
 

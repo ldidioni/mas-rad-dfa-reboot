@@ -26,3 +26,5 @@ export class Point
         this.coordinates = coordinates;
     }
 }
+
+export type state =  "new" | "inProgress" | "rejected" | "resolved";

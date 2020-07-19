@@ -12,7 +12,7 @@ export class IssueListComponent implements OnInit {
 
   issues: Issue[] = [];
   issuePoints: Point[] = [];
-  displayedColumns: string[] = ['id', 'state', 'description', 'createdAt', 'updatedAt'];
+  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt'];
 
   constructor(private issueService: IssueService) { }
 
@@ -22,11 +22,12 @@ export class IssueListComponent implements OnInit {
   }
 
   getAllIssues(): void {
-    this.issueService.loadAllIssues()
+    this.issueService.loadAllIssuesWithDetails()
         .subscribe({
             next: (issues: Issue[]) => {
               this.issues = issues;
               this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
+              console.log(this.issues);
               console.log(this.issuePoints);},
             //error: err => this.errorMessage = err
         });

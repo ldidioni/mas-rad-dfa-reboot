@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { Issue } from "src/app/models/issue";
 import { environment } from "../../../environments/environment";
 import { IssueNewRequest } from 'src/app/models/issue-new-request';
+import { mergeMap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -16,6 +17,11 @@ export class IssueService
   loadAllIssues(): Observable<Issue[]>
   {
     return this.http.get<Issue[]>(`${environment.apiUrl}/issues`);
+  }
+
+  loadAllIssuesWithDetails(): Observable<Issue[]>
+  {
+    return this.http.get<Issue[]>(`${environment.apiUrl}/issues?include=creator&include=issueType&include=assignee`);
   }
 
   loadIssue(id: number): Observable<Issue>

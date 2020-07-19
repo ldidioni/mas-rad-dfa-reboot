@@ -25,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 
 
@@ -53,6 +54,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatPaginatorModule,
     MatSelectModule,
     MatTableModule,
+    MatToolbarModule,
     MatChipsModule,
     MatIconModule
   ],

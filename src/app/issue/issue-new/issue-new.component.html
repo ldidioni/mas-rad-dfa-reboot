@@ -97,8 +97,12 @@
         (location)="onLocationSet">
     </app-issue-map>-->
 
+    <mat-error>
+        {{ locationMessage }}
+    </mat-error>
     <app-map 
         [mapPoints]="[]"
+        [clickable]="true"
         (location)="onLocationSet($event)"
     ></app-map>
 

@@ -10,7 +10,8 @@ import { GeolocationService } from 'src/app/shared/services/geolocation.service'
 })
 export class MapComponent implements OnDestroy, AfterViewInit {
 
-  @Input() mapPoints: Point[] = [];;
+  @Input() mapPoints: Point[] = [];
+  @Input() clickable: Boolean = true;
   @Output() location = new EventEmitter<[number, number]>();
 
   map;
@@ -86,12 +87,14 @@ export class MapComponent implements OnDestroy, AfterViewInit {
     //const description = 'bla';
     //this.addMarker(center, description);
 
-    this.map.on("click", (e: L.LeafletMouseEvent) => {
-      const marker = L.marker([e.latlng.lat, e.latlng.lng],
-        { icon: this.smallIcon });
-      marker.addTo(this.map).bindPopup('blabla');
-      this.location.emit([e.latlng.lng, e.latlng.lat]);
-    });
+    if(this.clickable) {
+      this.map.on("click", (e: L.LeafletMouseEvent) => {
+        const marker = L.marker([e.latlng.lat, e.latlng.lng],
+          { icon: this.smallIcon });
+        marker.addTo(this.map).bindPopup('blabla');
+        this.location.emit([e.latlng.lng, e.latlng.lat]);
+      });
+    }
   }
 }
 
