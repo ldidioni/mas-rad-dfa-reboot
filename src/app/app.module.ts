@@ -26,6 +26,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
 
 
 
@@ -37,7 +38,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MapComponent,
     IssueMapComponent,
     IssueNewComponent,
-    IssueListComponent
+    IssueListComponent,
+    IssueDetailComponent
   ],
   imports: [
     BrowserModule,

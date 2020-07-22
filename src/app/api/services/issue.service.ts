@@ -24,7 +24,7 @@ export class IssueService
     return this.http.get<Issue[]>(`${environment.apiUrl}/issues?include=creator&include=issueType&include=assignee`);
   }
 
-  loadIssue(id: number): Observable<Issue>
+  loadIssue(id: string): Observable<Issue>
   {
     return this.http.get<Issue>(`${environment.apiUrl}/issues/${id}`);
   }

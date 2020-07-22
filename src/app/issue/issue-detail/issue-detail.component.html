@@ -1,0 +1,86 @@
+<p>issue-detail works!</p>
+
+
+location: Point;
+
+<div class="card">
+    <div class="card-header"
+        *ngIf="issue">
+        {{'Issue #' + issue.id }}
+    </div>
+  
+    <div class="card-body"
+        *ngIf="issue">
+  
+        <div class="row">
+  
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-3">Description:</div>
+                    <div class="col-md-6">{{issue.description}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Type:</div>
+                    <div class="col-md-6">{{issue.issueTypeHref}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">State:</div>
+                    <div class="col-md-6">{{issue.state}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Creation:</div>
+                    <div class="col-md-6">{{issue.createdAt}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Updated:</div>
+                    <div class="col-md-6">{{issue.updatedAt}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Creator:</div>
+                    <div class="col-md-6">{{issue.creatorHref}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Assignee:</div>
+                    <div class="col-md-6">{{issue.assigneeHref}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Tags:</div>
+                    <div class="col-md-6">{{issue.tags}}</div>
+                </div>
+            </div>
+  
+            <div class="col-md-4"
+                *ngIf="issue.imageUrl">
+            <img class="center-block img-responsive"
+                [style.height.px]="150"
+                [style.margin.px]="2"
+                [src]="issue.imageUrl">
+            </div>
+            <div class="col-md-4"
+                *ngFor="let imageUrl of issue.additionalImageUrls">
+            <img class="center-block img-responsive"
+                [style.height.px]="150"
+                [style.margin.px]="2"
+                [src]="imageUrl">
+            </div>
+      </div>
+
+      <app-map [mapPoints]="issuePoint" [clickable]="false"></app-map>
+  
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <button class="btn btn-outline-secondary mr-3"
+                  style="width:80px">
+            <i class="fa fa-chevron-left"></i> Back
+          </button>
+          <button class="btn btn-outline-primary"
+                  style="width:80px"
+                  [routerLink]="['/issues', issue.id, 'edit']">
+            Edit
+          </button>
+        </div>
+      </div>
+  
+    </div>
+ 
+  </div>

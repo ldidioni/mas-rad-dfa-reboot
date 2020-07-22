@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IssueService } from 'src/app/api/services/issue.service';
 import { Issue, Point } from 'src/app/models/issue';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,9 +13,10 @@ export class IssueListComponent implements OnInit {
 
   issues: Issue[] = [];
   issuePoints: Point[] = [];
-  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt'];
+  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt', 'details'];
 
-  constructor(private issueService: IssueService) { }
+  constructor(private issueService: IssueService,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.getAllIssues();
@@ -40,6 +42,10 @@ export class IssueListComponent implements OnInit {
           //error: err => this.errorMessage = err
       });
   }
+
+ /*  onDetailClick(id: string) {
+    this.router.navigateByUrl(`issue/{id}`);
+  } */
 
   onSaveComplete(): void {
 

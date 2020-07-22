@@ -6,6 +6,7 @@ import { RegisterPageComponent } from './security/register-page/register-page.co
 import { AuthGuard } from './security/guards/auth.guard';
 import { IssueNewComponent } from './issue/issue-new/issue-new.component';
 import { IssueListComponent } from './issue/issue-list/issue-list.component';
+import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: "login", component: LoginPageComponent },
   { path: "register", component: RegisterPageComponent },
   { path: "issue/new", component: IssueNewComponent },
+  { path: 'issue/:id', component: IssueDetailComponent },
   { path: "issues", component: IssueListComponent },
   // Add the route to display the dummy page
   {
