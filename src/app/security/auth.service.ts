@@ -53,6 +53,16 @@ export class AuthService
   }
 
   /**
+  * Retrieves the User object from the latest AuthResponse value
+  */
+  isUserStaff(): Observable<boolean>
+  {
+    return this.authenticated$.pipe(
+      map((auth) => (auth ? auth.user.roles.includes('staff') : false))
+    );
+  }
+
+  /**
    * Retrieves the token string from the latest AuthResponse value
    */
   getToken(): Observable<string>
