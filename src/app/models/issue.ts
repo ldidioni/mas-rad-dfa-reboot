@@ -1,3 +1,5 @@
+import { IssueType } from './issue-type';
+
 export class Issue
 {
     readonly assigneeHref: string;
@@ -13,6 +15,7 @@ export class Issue
     imageUrl?: string;
     additionalImageUrls?: string[];
     tags?: string[];
+    issueType?: IssueType; // support for include statements
 }
 
 export class Point
