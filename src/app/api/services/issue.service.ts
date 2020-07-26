@@ -24,6 +24,13 @@ export class IssueService
     return this.http.get<Issue[]>(`${environment.apiUrl}/issues?include=creator&include=issueType&include=assignee`);
   }
 
+  searchIssues(queryObject: any): Observable<Issue[]>
+  {
+    const headers = new HttpHeaders({ 'Content-type': 'application/json'});
+
+    return this.http.post<Issue[]>(`${environment.apiUrl}/issues/searches?include=creator&include=issueType&include=assignee`, queryObject, { headers: headers });
+  }
+
   loadIssue(id: string): Observable<Issue>
   {
     return this.http.get<Issue>(`${environment.apiUrl}/issues/${id}`);
