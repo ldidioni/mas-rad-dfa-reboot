@@ -33,14 +33,23 @@
                 <input matInput
                     id="{{ 'ImageUrl' + i }}"
                     type="text"
-                    placeholder="ImageUrl URL"
                     [formControlName]="i"
-                    [ngClass]="{ 'is-invalid': imageUrlMessage }" />
+                    placeholder="ImageUrl URL"
+                    [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
+                                               (imageUrls.controls[i].errors?.required ||
+                                               imageUrls.controls[i].errors?.pattern) }"/>
             </mat-form-field>
+            <mat-error>
+                <span *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
+                              imageUrls.controls[i].errors?.required">
+                    Please enter an image URL
+                </span>
+                <span *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
+                              imageUrls.controls[i].errors?.pattern">
+                    The image URL is not valid.
+                </span>
+            </mat-error>
         </div>
-        <mat-error>
-            {{ imageUrlMessage }}
-        </mat-error>
     </div>
     <button mat-raised-button
         type="button"

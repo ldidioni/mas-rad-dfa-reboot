@@ -5,7 +5,7 @@ import { Point } from 'src/app/models/issue';
 import { IssueService } from 'src/app/api/services/issue.service';
 import { IssueTypeService } from 'src/app/api/services/issue-type.service';
 import { IssueType } from 'src/app/models/issue-type';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { debounceTime } from 'rxjs/operators';
 
@@ -58,9 +58,9 @@ export class IssueNewComponent implements OnInit {
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
       issueType:    ['', [Validators.required]],
       //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
-      imageUrls:  this.formBuilder.array([this.buildImageUrl()]),
+      imageUrls:    this.formBuilder.array([this.buildImageUrl()]),
       tags:         [this.tags, [Validators.required, checkTagLength]],
-      location:    ['', [Validators.required]]
+      location:     ['', [Validators.required]]
       //roles:      [{value: ['citizen'], disabled: true}]
     });
 
@@ -85,11 +85,11 @@ export class IssueNewComponent implements OnInit {
     );
 
     const imageUrlsControl = this.newIssueForm.get('imageUrls');
-    imageUrlsControl.valueChanges.pipe(
+    /* imageUrlsControl.valueChanges.pipe(
       debounceTime(1000)
     ).subscribe(
       value => this.setImageUrlsMessage(imageUrlsControl)
-    );
+    ); */
 
     const tagsControl = this.newIssueForm.get('tags');
     tagsControl.valueChanges.pipe(
@@ -107,9 +107,11 @@ export class IssueNewComponent implements OnInit {
   }
 
   buildImageUrl(): FormControl {
-    return this.formBuilder.control({
-      imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
-    });
+    //return this.formBuilder.control({
+    //  imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
+  //});
+  return new FormControl(
+    '', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]);
   }
 
   get imageUrl(): FormControl {
@@ -290,14 +292,14 @@ export class IssueNewComponent implements OnInit {
     }
   }
 
-  setImageUrlsMessage(c: AbstractControl): void {
+/*   setImageUrlsMessage(c: AbstractControl): void {
     this.imageUrlMessage = '';
     if((c.touched || c.dirty) && c.errors) {
       console.log(c.errors);
       this.imageUrlMessage = Object.keys(c.errors).map(
         key => this.imageUrlValidationMessages[key]).join(' ');
     }
-  }
+  } */
 
   setTagsMessage(c: AbstractControl): void {
     this.tagsMessage = '';
