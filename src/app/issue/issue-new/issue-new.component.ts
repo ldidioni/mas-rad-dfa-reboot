@@ -237,6 +237,10 @@ export class IssueNewComponent implements OnInit {
     }
   }
 
+  removeImageUrl(index: number): void {
+    this.imageUrls.removeAt(index);
+  }
+
   reportIssue(): void {
     if (this.newIssueForm.valid) {
       if (this.newIssueForm.dirty) {
