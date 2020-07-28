@@ -4,6 +4,8 @@ import { Issue, Point, state } from 'src/app/models/issue';
 import { Router } from '@angular/router';
 import { IssueType } from 'src/app/models/issue-type';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+import { LeafletMouseEvent } from 'leaflet';
+import * as L from 'leaflet';
 
 
 @Component({
@@ -103,6 +105,14 @@ export class IssueListComponent implements OnInit {
             this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
           }
         });
+  }
+
+  searchIssues(event: LeafletMouseEvent, radius: number) {
+    this.issuePoints = this.issuePoints.filter((issuePoint: Point) => {
+      event.latlng.distanceTo(L.latLng(
+        issuePoint.coordinates[1],
+        issuePoint.coordinates[0])) < radius;
+    });
   }
 
   editIssue(issue: Issue): void {
