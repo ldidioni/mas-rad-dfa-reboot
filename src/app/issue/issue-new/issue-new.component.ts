@@ -9,6 +9,16 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { debounceTime } from 'rxjs/operators';
 
+function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null {
+
+  const hasExpectedLength = (tag: string) => 2 <= tag.length && tag.length <= 25;
+
+  if(c.value.every(hasExpectedLength)){
+    return (null);
+  }
+  return {'tagLength': true};
+}
+
 @Component({
   selector: 'app-issue-new',
   templateUrl: './issue-new.component.html',
@@ -27,6 +37,8 @@ export class IssueNewComponent implements OnInit {
   tagsMessage: string;
   locationMessage: string;
 
+  tags: string[];
+
   visible = true;
   selectable = true;
   removable = true;
@@ -36,6 +48,7 @@ export class IssueNewComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private issueTypeService: IssueTypeService,
               private issueService: IssueService) {
+    this.tags = [];
     this.issueNewRequest = new IssueNewRequest();
   }
 
@@ -46,10 +59,12 @@ export class IssueNewComponent implements OnInit {
       issueType:    ['', [Validators.required]],
       //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
       imageUrls:  this.formBuilder.array([this.buildImageUrl()]),
-      tags:         ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+      tags:         [this.tags, [Validators.required, checkTagLength]],
       location:    ['', [Validators.required]]
       //roles:      [{value: ['citizen'], disabled: true}]
     });
+
+    this.newIssueForm.controls['tags'].setValue(this.tags);
 
 /*     this.newIssueForm.get('issueType').valueChanges.subscribe(item => {
       this.issueTypes = item.issueTypes
@@ -98,11 +113,17 @@ export class IssueNewComponent implements OnInit {
   }
 
   get imageUrl(): FormControl {
-    return <FormControl>this.newIssueForm.get('imageUrl');
+    if(this.newIssueForm) {
+      return <FormControl>this.newIssueForm.get('imageUrl');
+    }
+    return null;
   }
 
   get imageUrls(): FormArray {
-    return <FormArray>this.newIssueForm.get('imageUrls');
+    if(this.newIssueForm) {
+      return <FormArray>this.newIssueForm.get('imageUrls');
+    }
+    return null;
   }
 
   addImageUrl(): void {
@@ -133,8 +154,7 @@ export class IssueNewComponent implements OnInit {
 
   private tagsValidationMessages = {
     required: 'Please enter at least one tag.',
-    minlength: 'Each tag must contain at least 2 characters.',
-    maxlength: 'Each tag must contain at most 25 characters.'
+    tagLength: 'Each tag must contain from 2 to 25 characters.'
   };
 
   private locationValidationMessages = {
@@ -148,11 +168,14 @@ export class IssueNewComponent implements OnInit {
   //registerForm.get('firstname').valid
   //registerForm.get('passwordGroup.password').valid
 
-  get tags() {
-    return this.newIssueForm.get('tags');
-  }
+  /* get tags() {
+    if(this.newIssueForm) {
+      return <FormControl>this.newIssueForm.get('tags');
+    }
+    return null;
+  } */
 
-  addTag(event: MatChipInputEvent): void {
+  /* addTag(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
@@ -166,14 +189,47 @@ export class IssueNewComponent implements OnInit {
     if (input) {
       input.value = '';
     }
+  } */
+
+  addTag(event: MatChipInputEvent) {
+    const input = event.input;
+    const value = event.value;
+    if ((value.trim() !== '')) {
+      this.newIssueForm.controls['tags'].setErrors(null);   // 1
+      const tempEmails = this.newIssueForm.controls['tags'].value; // 2
+      tempEmails.push(value.trim());
+      this.newIssueForm.controls['tags'].setValue(tempEmails);     // 3
+      if (this.newIssueForm.controls['tags'].valid) {              // 4
+        this.newIssueForm.controls['tags'].markAsDirty();
+        input.value = '';                                    // 5
+      } else {
+        const index = this.newIssueForm.controls['tags'].value.findIndex(value1 => value1 === value.trim());
+        if (index !== -1) {
+          this.newIssueForm.controls['tags'].value.splice(index, 1);           // 6
+        }
+      }
+    } else {
+      this.newIssueForm.controls['tags'].updateValueAndValidity();  // 7
+    }
   }
 
-  removeTag(tag: string): void {
+  /* removeTag(tag: string): void {
     const index = this.tags.value.indexOf(tag);
 
     if (index >= 0) {
       this.tags.value.splice(index, 1);
       this.tags.updateValueAndValidity();
+    }
+  } */
+
+  removeTag(tag: string): void {
+    //let controller = this.newIssueForm.controls['tags'];
+    const index = this.tags.indexOf(tag);
+
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+      this.newIssueForm.controls['tags'].updateValueAndValidity();
+      this.newIssueForm.controls['tags'].markAsDirty();
     }
   }
 
@@ -185,7 +241,8 @@ export class IssueNewComponent implements OnInit {
         this.issueNewRequest.description = this.newIssueForm.get('description').value;
         this.issueNewRequest.imageUrl = this.newIssueForm.get('imageUrls').value[0] ;
         this.issueNewRequest.additionalImageUrls = this.newIssueForm.get('imageUrls').value.slice(1) ;
-        this.issueNewRequest.tags = this.tags.value ;
+        this.newIssueForm.controls['tags'].markAsTouched();
+        this.issueNewRequest.tags = this.newIssueForm.controls['tags'].value ;
         this.issueNewRequest.location = this.newIssueForm.get('location').value;
 
         console.log(this.issueNewRequest);
@@ -267,13 +324,11 @@ export class IssueNewComponent implements OnInit {
   ).subscribe(
     value => this.setIssueTypeHrefMessage(issueTypeHrefControl)
   );
-
   const imageControl = this.newIssueForm.get('images.0');
   imageControl.valueChanges.pipe(
     debounceTime(1000)
   ).subscribe(
     value => this.setImageUrlMessage(imageControl)
   );
-
    */
 }

@@ -66,7 +66,7 @@
     <mat-form-field>
         <mat-chip-list #chipList formControlName="tags">
             <mat-label for="tagsId">Tags</mat-label>
-            <mat-chip *ngFor="let tag of tags.value" [selectable]="selectable"
+            <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
                 [removable]="removable" (removed)="removeTag(tag)">
                 {{tag}}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
@@ -100,7 +100,7 @@
     <mat-error>
         {{ locationMessage }}
     </mat-error>
-    <app-map 
+    <app-map
         [mapPoints]="[]"
         [clickable]="true"
         (location)="onLocationSet($event)"
