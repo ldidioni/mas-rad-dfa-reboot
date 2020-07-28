@@ -36,6 +36,7 @@ export class IssueNewComponent implements OnInit {
   issueTypeMessage: string;
   tagsMessage: string;
   locationMessage: string;
+  mapClicked: boolean;
 
   tags: string[];
 
@@ -50,6 +51,7 @@ export class IssueNewComponent implements OnInit {
               private issueService: IssueService) {
     this.tags = [];
     this.issueNewRequest = new IssueNewRequest();
+    this.mapClicked = false;
   }
 
   ngOnInit(): void {
@@ -111,7 +113,7 @@ export class IssueNewComponent implements OnInit {
     //  imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
   //});
   return new FormControl(
-    '', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]);
+    '', [Validators.required, Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|png)$')]);
   }
 
   get imageUrl(): FormControl {
@@ -270,6 +272,7 @@ export class IssueNewComponent implements OnInit {
 
   onLocationSet($event): void {
     console.log($event);
+    this.mapClicked = true;
     this.newIssueForm.get('location').setValue(new Point($event));
     //this.issueNewRequest.location = new Point($event);
   }

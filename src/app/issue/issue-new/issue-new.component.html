@@ -9,9 +9,16 @@
             type="text"
             placeholder="Description (required)"
             formControlName="description"
-            [ngClass]="{ 'is-invalid': descriptionMessage }" />
-        <mat-error>
-            {{ descriptionMessage }}
+            [ngClass]="{ 'is-invalid': (newIssueForm.get('description').touched || newIssueForm.get('description').dirty) &&
+                                       (newIssueForm.get('description').errors?.required ||
+                                        newIssueForm.get('description').errors?.pattern)  }" />
+        <mat-error *ngIf="newIssueForm.get('description').touched || newIssueForm.get('description').dirty">
+            <span  *ngIf="newIssueForm.get('description').errors?.required">
+                Please enter a description.
+            </span>
+            <span *ngIf="newIssueForm.get('description').errors?.maxlength">
+                The description must contain at most 1000 characters.
+            </span>
         </mat-error>
     </mat-form-field>
 <!--
@@ -37,15 +44,13 @@
                     placeholder="ImageUrl URL"
                     [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
                                                (imageUrls.controls[i].errors?.required ||
-                                               imageUrls.controls[i].errors?.pattern) }"/>
+                                                imageUrls.controls[i].errors?.pattern) }"/>
             </mat-form-field>
-            <mat-error>
-                <span *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
-                              imageUrls.controls[i].errors?.required">
+            <mat-error *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty)">
+                <span *ngIf="imageUrls.controls[i].errors?.required">
                     Please enter an image URL
                 </span>
-                <span *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
-                              imageUrls.controls[i].errors?.pattern">
+                <span *ngIf="imageUrls.controls[i].errors?.pattern">
                     The image URL is not valid.
                 </span>
             </mat-error>
@@ -67,8 +72,10 @@
                 {{ issueType.name }}
             </mat-option>
         </mat-select>
-        <mat-error>
-            {{ issueTypeMessage }}
+        <mat-error *ngIf="newIssueForm.get('issueType').touched || newIssueForm.get('issueType').dirty">
+            <span *ngIf="newIssueForm.get('issueType').errors?.required">
+                Please select a type for the issue.
+            </span>
         </mat-error>
     </mat-form-field>
 
@@ -94,6 +101,19 @@
         </mat-error>
     </mat-form-field>
 
+  <!--  <app-issue-map
+        (location)="onLocationSet">
+    </app-issue-map>-->
+
+    <app-map
+        [mapPoints]="[]"
+        [clickable]="true"
+        (location)="onLocationSet($event)">
+    </app-map>
+    <mat-error *ngIf="!this.mapClicked">
+        Please click the map to set a location for the issue.
+    </mat-error>
+
     <button
         mat-raised-button color="primary"
         type="submit"
@@ -101,19 +121,6 @@
         [disabled]="!newIssueForm.valid">
         Register
     </button>
-
-  <!--  <app-issue-map
-        (location)="onLocationSet">
-    </app-issue-map>-->
-
-    <mat-error>
-        {{ locationMessage }}
-    </mat-error>
-    <app-map
-        [mapPoints]="[]"
-        [clickable]="true"
-        (location)="onLocationSet($event)"
-    ></app-map>
 
 </form>
 
