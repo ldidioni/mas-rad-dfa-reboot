@@ -9,9 +9,24 @@
             type="text"
             placeholder="Username (required)"
             formControlName="name"
-            [ngClass]="{ 'is-invalid': nameMessage }" />
-        <mat-error>
-            {{ nameMessage }}
+            [ngClass]="{ 'is-invalid': (registerForm.get('name').touched || registerForm.get('name').dirty) &&
+                                       (registerForm.get('name').errors?.required  ||
+                                        registerForm.get('name').errors?.maxlength ||
+                                        registerForm.get('name').errors?.pattern   ||
+                                        registerForm.get('name').errors?.nameTaken)  }" />
+        <mat-error *ngIf="registerForm.get('name').touched || registerForm.get('name').dirty">
+            <span  *ngIf="registerForm.get('name').errors?.required">
+                Please enter a username.
+            </span>
+            <span  *ngIf="registerForm.get('name').errors?.maxlength">
+                The username must contain at most 25 characters.
+            </span>
+            <span  *ngIf="registerForm.get('name').errors?.pattern">
+                The username must only contain alphanumerical characters.
+            </span>
+            <span  *ngIf="registerForm.get('name').errors?.nameTaken">
+                This username is not available, please choose another one.
+            </span>
         </mat-error>
     </mat-form-field>
     <div formGroupName="passwordGroup">
@@ -22,7 +37,22 @@
                 type="password"
                 placeholder="Password (required)"
                 formControlName="password"
-                [ngClass]="{ 'is-invalid': passwordMessage }" />
+                [ngClass]="{ 'is-invalid': (registerForm.get('passwordGroup.password').touched || 
+                                            registerForm.get('passwordGroup.password').dirty) &&
+                                           (registerForm.get('passwordGroup.password').errors?.required  ||
+                                            registerForm.get('passwordGroup.password').errors?.minlength)  }" />
+            <mat-error *ngIf="registerForm.get('passwordGroup.password').touched || 
+                              registerForm.get('passwordGroup.password').dirty">
+                <span  *ngIf="registerForm.get('passwordGroup.password').errors?.required">
+                    Please enter a password.
+                </span>
+                <span  *ngIf="registerForm.get('passwordGroup.password').errors?.minlength">
+                    The password must contain at least 4 characters.
+                </span>
+                <span  *ngIf="registerForm.get('lastname').errors?.match">
+                    The password confirmation and password do not match.
+                </span>
+            </mat-error>
         </mat-form-field>
         <mat-form-field>
             <mat-label for="passwordRepeatId">Password confirmation</mat-label>
@@ -31,12 +61,24 @@
                 type="password"
                 placeholder="Password confirmation (required)"
                 formControlName="passwordRepeat"
-                [ngClass]="{ 'is-invalid': passwordMessage || passwordGroupMessage }" />
-            <mat-error class="invalid-feedback">
-                {{ passwordMessage }}
-                {{ passwordGroupMessage }}
+                [ngClass]="{ 'is-invalid': (registerForm.get('passwordGroup.passwordRepeat').touched || 
+                                            registerForm.get('passwordGroup.passwordRepeat').dirty) &&
+                                           (registerForm.get('passwordGroup.passwordRepeat').errors?.required  ||
+                                            registerForm.get('passwordGroup').errors?.nomatch)  }" />       
+            <mat-error>
+                <span  *ngIf="registerForm.get('passwordGroup.passwordRepeat').errors?.required">
+                Please confirm your password.
+                </span>
+                <span  *ngIf="registerForm.get('passwordGroup').errors?.nomatch">
+                    The password confirmation and password do not match.
+                </span>
             </mat-error>
         </mat-form-field>
+        <mat-error>
+            <span  *ngIf="registerForm.get('passwordGroup').errors?.nomatch">
+                The password confirmation and password do not match.
+            </span>
+        </mat-error>
     </div>
     <mat-form-field>
         <mat-label for="firstnameId">First Name</mat-label>
@@ -45,9 +87,21 @@
             type="text"
             placeholder="First name (required)"
             formControlName="firstname"
-            [ngClass]="{ 'is-invalid': firstnameMessage }" />
-        <mat-error class="invalid-feedback">
-            {{ firstnameMessage }}
+            [ngClass]="{ 'is-invalid': (registerForm.get('firstname').touched || registerForm.get('firstname').dirty) &&
+                                       (registerForm.get('firstname').errors?.required  ||
+                                        registerForm.get('firstname').errors?.maxlength ||
+                                        registerForm.get('firstname').errors?.pattern   ||
+                                        registerForm.get('firstname').errors?.nameTaken)  }" />
+        <mat-error *ngIf="registerForm.get('firstname').touched || registerForm.get('firstname').dirty">
+            <span  *ngIf="registerForm.get('firstname').errors?.required">
+                Please enter a firstname.
+            </span>
+            <span  *ngIf="registerForm.get('firstname').errors?.minlength">
+                The firstname must contain at least 2 characters.
+            </span>
+            <span  *ngIf="registerForm.get('firstname').errors?.maxlength">
+                The firstname must contain at most 25 characters.
+            </span>
         </mat-error>
     </mat-form-field>
     <mat-form-field>
@@ -57,9 +111,21 @@
             type="text"
             placeholder="Last name (required)"
             formControlName="lastname"
-            [ngClass]="{ 'is-invalid': lastnameMessage }" />
-        <mat-error class="invalid-feedback">
-            {{ lastnameMessage }}
+            [ngClass]="{ 'is-invalid': (registerForm.get('lastname').touched || registerForm.get('lastname').dirty) &&
+                                       (registerForm.get('lastname').errors?.required  ||
+                                        registerForm.get('lastname').errors?.maxlength ||
+                                        registerForm.get('lastname').errors?.pattern   ||
+                                        registerForm.get('lastname').errors?.nameTaken)  }" />
+        <mat-error *ngIf="registerForm.get('lastname').touched || registerForm.get('lastname').dirty">
+            <span  *ngIf="registerForm.get('lastname').errors?.required">
+                Please enter a lastname.
+            </span>
+            <span  *ngIf="registerForm.get('lastname').errors?.minlength">
+                The lastname must contain at least 2 characters.
+            </span>
+            <span  *ngIf="registerForm.get('lastname').errors?.maxlength">
+                The lastname must contain at most 25 characters.
+            </span>
         </mat-error>
     </mat-form-field>
     <mat-form-field>
@@ -69,9 +135,12 @@
             type="text"
             placeholder="Phone (optional)"
             formControlName="phone"
-            [ngClass]="{ 'is-invalid': phoneMessage }" />
-        <mat-error class="invalid-feedback">
-            {{ phoneMessage }}
+            [ngClass]="{ 'is-invalid': (registerForm.get('phone').touched || registerForm.get('phone').dirty) &&
+                                       (registerForm.get('phone').errors?.maxlength)  }" />
+        <mat-error *ngIf="registerForm.get('phone').touched || registerForm.get('phone').dirty">
+            <span  *ngIf="registerForm.get('phone').errors?.maxlength">
+                The phone number must contain at most 20 characters.
+            </span>
         </mat-error>
     </mat-form-field>
     <button

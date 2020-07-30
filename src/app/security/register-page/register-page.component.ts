@@ -15,7 +15,7 @@ function confirmPassword(c: AbstractControl): {[key: string]: boolean} | null {
   if(passwordRepeatControl.value === passwordControl.value) {
     return (null);
   }
-  return {'match': true};
+  return {'nomatch': true};
 }
 
 @Component({
@@ -40,7 +40,7 @@ export class RegisterPageComponent implements OnInit {
     required: 'Please enter a username.',
     maxlength: 'The username must contain at most 25 characters.',
     pattern: 'The username must only contain alphanumerical characters',
-    nameTaken: 'This username is not available, please choose another one'
+    nameTaken: 'This username is not available, please choose another one.'
   };
 
   private passwordValidationMessages = {
@@ -49,7 +49,7 @@ export class RegisterPageComponent implements OnInit {
   };
 
   private passwordGroupValidationMessages = {
-    match: 'The password confirmation and password do not match.'
+    nomatch: 'The password confirmation and password do not match.'
   };
 
   private firstnameValidationMessages = {
