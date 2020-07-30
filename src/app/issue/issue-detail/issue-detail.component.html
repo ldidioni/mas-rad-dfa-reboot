@@ -80,7 +80,30 @@ location: Point;
           </button>
         </div>
       </div>
-  
     </div>
  
   </div>
+  <div *ngFor="let comment of comments">
+    <div>{{ comment.author.name }}</div>
+    <div>{{ comment.createdAt | date: 'mediumDate' }}</div>
+    <div>{{ comment.text }}</div>
+  </div>
+  <form #newCommentForm="ngForm" (submit)="submitComment(newCommentForm)">
+    <mat-form-field>
+      <mat-label for="newCommentReq">Your comment</mat-label>
+      <input matInput
+        type="text"
+        name="newCommentReq"
+        id="newCommentReq"
+        #newCommentField="ngModel"
+        required
+        [(ngModel)]="newCommentReq.text"
+      />
+      <mat-error *ngIf="newCommentField.hasError('required') && newCommentField.touched">
+        Please enter a comment.
+      </mat-error>
+    </mat-form-field>
+    <div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="newCommentForm.invalid">Submit comment</button>
+    </div>
+</form>

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { IssueComment } from "src/app/models/issue-comment";
 import { environment } from "../../../environments/environment";
@@ -12,13 +12,15 @@ export class IssueCommentService
 {
   constructor(private http: HttpClient) {}
 
-  loadAllCommentsForIssue(issueId: string): Observable<Comment[]>
+  loadAllCommentsForIssue(issueId: string): Observable<IssueComment[]>
   {
-    return this.http.get<Comment[]>(`${environment.apiUrl}/issues/${issueId}/comments?include=author`);
+    return this.http.get<IssueComment[]>(`${environment.apiUrl}/issues/${issueId}/comments?include=author`);
   }
 
-  createCommentsForIssue(issueId: string, commentText: string): Observable<Comment>
+  createCommentForIssue(issueId: string, commentText: string): Observable<IssueComment>
   {
-    return this.http.post<Comment>(`${environment.apiUrl}/issues/${issueId}/comments`, {"text": commentText});
+    const headers = new HttpHeaders({ 'Content-type': 'application/json'});
+
+    return this.http.post<IssueComment>(`${environment.apiUrl}/issues/${issueId}/comments`, {"text": commentText}, { headers: headers });
   }
 }
