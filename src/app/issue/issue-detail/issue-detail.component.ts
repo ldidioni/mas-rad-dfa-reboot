@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { IssueService } from 'src/app/api/services/issue.service';
 import { Issue, Point } from 'src/app/models/issue';
+import { IssueCommentService } from 'src/app/api/services/issue-comment.service';
 
 @Component({
   selector: 'app-issue-detail',
@@ -13,15 +14,18 @@ export class IssueDetailComponent implements OnInit {
 
   issue: Issue = new Issue();
   issuePoint: Point[] = [];
+  comments: Comment[] = [];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private issueService: IssueService) { }
+              private issueService: IssueService,
+              private issueCommentService: IssueCommentService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.getIssue(id);
+      this.getCommentsForIssue(id);
     }
   }
 
@@ -38,4 +42,13 @@ export class IssueDetailComponent implements OnInit {
         });
   }
 
+  getCommentsForIssue(id: string): void {
+    this.issueCommentService.loadAllCommentsForIssue(id)
+    .subscribe({
+      next: (comments: Comment[]) => {
+        this.comments = comments;
+      },
+       //error: err => this.errorMessage = err
+    });
+  }
 }

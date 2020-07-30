@@ -12,12 +12,12 @@ export class IssueCommentService
 {
   constructor(private http: HttpClient) {}
 
-  loadAllCommentsForIssue(issueId: number): Observable<Comment[]>
+  loadAllCommentsForIssue(issueId: string): Observable<Comment[]>
   {
     return this.http.get<Comment[]>(`${environment.apiUrl}/issues/${issueId}/comments?include=author`);
   }
 
-  createCommentsForIssue(issueId: number, commentText: string): Observable<Comment>
+  createCommentsForIssue(issueId: string, commentText: string): Observable<Comment>
   {
     return this.http.post<Comment>(`${environment.apiUrl}/issues/${issueId}/comments`, {"text": commentText});
   }
