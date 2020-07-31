@@ -64,7 +64,7 @@ export class IssueEditComponent implements OnInit {
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
       issueType:    ['', [Validators.required]],
       //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
-      //imageUrls:    this.formBuilder.array([this.buildImageUrl()]),
+      imageUrls:    this.formBuilder.array([this.buildImageUrl()]),
       tags:         [this.tags, [Validators.required, checkTagLength]],
       location:     ['', [Validators.required]]
       //roles:      [{value: ['citizen'], disabled: true}]
@@ -95,7 +95,9 @@ export class IssueEditComponent implements OnInit {
               this.editIssueForm.registerControl('imageUrls', new FormArray([control]));
             
               //this.imageUrls.push(new FormControl(this.issue.imageUrl, Validators.required));
-            
+              const imageUrls = this.editIssueForm.get('imageUrls') as FormArray;
+              this.imageUrls.setControl(0, new FormControl(this.issue.imageUrl, Validators.required));
+
               for(const additionalImageUrl of this.issue.additionalImageUrls) {
                 const imageUrls = this.editIssueForm.get('imageUrls') as FormArray;
                 imageUrls.push(new FormControl(additionalImageUrl, Validators.required));
