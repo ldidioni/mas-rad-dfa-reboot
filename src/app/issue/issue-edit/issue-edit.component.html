@@ -1,0 +1,137 @@
+<p>issue-edit works!</p>
+<h2>Report a new issue</h2>
+<form novalidate
+      (ngSubmit)="reportIssue()"
+      [formGroup]="editIssueForm">
+    <mat-form-field>
+        <mat-label for="descriptionId">Description</mat-label>
+        <input matInput
+            id="descriptionId"
+            type="text"
+            placeholder="Description (required)"
+            formControlName="description"
+            [ngClass]="{ 'is-invalid': (editIssueForm.get('description').touched || editIssueForm.get('description').dirty) &&
+                                       (editIssueForm.get('description').errors?.required ||
+                                        editIssueForm.get('description').errors?.pattern)  }" />
+        <mat-error *ngIf="editIssueForm.get('description').touched || editIssueForm.get('description').dirty">
+            <span  *ngIf="editIssueForm.get('description').errors?.required">
+                Please enter a description.
+            </span>
+            <span *ngIf="editIssueForm.get('description').errors?.maxlength">
+                The description must contain at most 1000 characters.
+            </span>
+        </mat-error>
+    </mat-form-field>
+<!--
+    <label for="imageUrlId">Image URL</label>
+    <input
+        id="imageUrlId"
+        type="text"
+        placeholder="Image URL"
+        formControlName="imageUrl"
+        [ngClass]="{ 'is-invalid': descriptionMessage }" />
+    <span class="invalid-feedback">
+        {{ descriptionMessage }}
+    </span>
+-->
+    <div formArrayName="imageUrls">
+        <div *ngFor="let imageUrl of imageUrls.controls; let i=index">
+            <mat-form-field>
+                <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
+                <input matInput
+                    id="{{ 'ImageUrl' + i }}"
+                    type="text"
+                    [formControlName]="i"
+                    placeholder="ImageUrl URL"
+                    [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
+                                               (imageUrls.controls[i].errors?.required ||
+                                                imageUrls.controls[i].errors?.pattern) }"/>
+            </mat-form-field>
+            <button *ngIf="i > 0"
+                mat-raised-button
+                type="button"
+                (click)="removeImageUrl(i)">
+                X
+            </button>
+            <mat-error *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty)">
+                <span *ngIf="imageUrls.controls[i].errors?.required">
+                    Please enter an image URL
+                </span>
+                <span *ngIf="imageUrls.controls[i].errors?.pattern">
+                    The image URL is not valid.
+                </span>
+            </mat-error>
+        </div>
+    </div>
+    <button mat-raised-button
+        type="button"
+        [disabled]="!imageUrls.valid"
+        (click)="addImageUrl()">
+        Add image
+    </button>
+
+    <mat-form-field>
+        <mat-label for="typeId">Type</mat-label>
+        <mat-select
+            id="typeId"
+            formControlName="issueType">
+            <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.href">
+                {{ issueType.name }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="editIssueForm.get('issueType').touched || editIssueForm.get('issueType').dirty">
+            <span *ngIf="editIssueForm.get('issueType').errors?.required">
+                Please select a type for the issue.
+            </span>
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-chip-list #chipList formControlName="tags">
+            <mat-label for="tagsId">Tags</mat-label>
+            <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                [removable]="removable" (removed)="removeTag(tag)">
+                {{tag}}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+                placeholder="New Tag..."
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addTag($event)"
+                id="tagsId"
+                [ngClass]="{ 'is-invalid': tagsMessage }" />
+        </mat-chip-list>
+        <mat-error>
+            {{ tagsMessage }}
+        </mat-error>
+    </mat-form-field>
+
+  <!--  <app-issue-map
+        (location)="onLocationSet">
+    </app-issue-map>-->
+
+    <app-map
+        [mapPoints]="[]"
+        [clickable]="true"
+        (location)="onLocationSet($event)">
+    </app-map>
+    <mat-error *ngIf="!this.mapClicked">
+        Please click the map to set a location for the issue.
+    </mat-error>
+
+    <button
+        mat-raised-button color="primary"
+        type="submit"
+        [title]="editIssueForm.valid ? 'Submit' : 'Please complete the form'"
+        [disabled]="!editIssueForm.valid">
+        Register
+    </button>
+
+</form>
+
+
+<p>
+    Form value: {{ editIssueForm.value | json }}
+</p>

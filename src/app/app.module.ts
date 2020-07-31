@@ -27,6 +27,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
+import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
 
 
 
@@ -39,7 +40,8 @@ import { IssueDetailComponent } from './issue/issue-detail/issue-detail.componen
     IssueMapComponent,
     IssueNewComponent,
     IssueListComponent,
-    IssueDetailComponent
+    IssueDetailComponent,
+    IssueEditComponent
   ],
   imports: [
     BrowserModule,

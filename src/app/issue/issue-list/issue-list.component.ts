@@ -17,7 +17,7 @@ export class IssueListComponent implements OnInit {
 
   issues: Issue[] = [];
   issuePoints: Point[] = [];
-  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt', 'details'];
+  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt', 'details', 'editIssue'];
 
   issueTypes: string[];
   issueStates: string[];
