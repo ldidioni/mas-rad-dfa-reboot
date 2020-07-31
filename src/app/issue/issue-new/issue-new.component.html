@@ -100,10 +100,17 @@
                 [matChipInputAddOnBlur]="addOnBlur"
                 (matChipInputTokenEnd)="addTag($event)"
                 id="tagsId"
-                [ngClass]="{ 'is-invalid': tagsMessage }" />
+                [ngClass]="{ 'is-invalid': (newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty) &&
+                                           (newIssueForm.get('tags').errors?.required ||
+                                            newIssueForm.get('tags').errors?.tagLength) }" />
         </mat-chip-list>
-        <mat-error>
-            {{ tagsMessage }}
+        <mat-error *ngIf="newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty">
+            <span *ngIf="newIssueForm.get('tags').errors?.required">
+                Please enter at least one tag.
+            </span>
+            <span *ngIf="newIssueForm.get('tags').errors?.tagLength">
+                Each tag must contain from 2 to 25 characters.
+            </span>
         </mat-error>
     </mat-form-field>
 
@@ -125,7 +132,7 @@
         type="submit"
         [title]="newIssueForm.valid ? 'Submit' : 'Please complete the form'"
         [disabled]="!newIssueForm.valid">
-        Register
+        Report issue
     </button>
 
 </form>

@@ -60,10 +60,6 @@ export class IssueEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllIssueTypes();
-    this.id = this.route.snapshot.paramMap.get('id');
-    if (this.id) {
-      this.getIssue(this.id);
-    }
     this.editIssueForm = this.formBuilder.group({
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
       issueType:    ['', [Validators.required]],
@@ -74,7 +70,12 @@ export class IssueEditComponent implements OnInit {
       //roles:      [{value: ['citizen'], disabled: true}]
     });
 
-    this.editIssueForm.controls['tags'].setValue(this.tags);
+    //this.editIssueForm.controls['tags'].setValue(this.tags);
+
+    this.id = this.route.snapshot.paramMap.get('id');
+    if (this.id) {
+      this.getIssue(this.id);
+    }
 
 /*     this.editIssueForm.get('issueType').valueChanges.subscribe(item => {
       this.issueTypes = item.issueTypes
@@ -96,11 +97,13 @@ export class IssueEditComponent implements OnInit {
               //this.imageUrls.push(new FormControl(this.issue.imageUrl, Validators.required));
             
               for(const additionalImageUrl of this.issue.additionalImageUrls) {
-                this.imageUrls.push(new FormControl(additionalImageUrl, Validators.required));
+                const imageUrls = this.editIssueForm.get('imageUrls') as FormArray;
+                imageUrls.push(new FormControl(additionalImageUrl, Validators.required));
               }
 
               this.tags = this.issue.tags;
-              //this.editIssueForm.controls['tags'].setValue(this.issue.tags);
+              this.editIssueForm.controls['tags'].setValue(this.issue.tags);
+
               this.editIssueForm.get('location').setValue(this.issue.location);
 
               console.log(this.issue);

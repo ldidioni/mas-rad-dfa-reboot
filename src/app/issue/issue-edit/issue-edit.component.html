@@ -1,5 +1,5 @@
 <p>issue-edit works!</p>
-<h2>Report a new issue</h2>
+<h2>Update issue with id #{{ id }}</h2>
 <form novalidate
       (ngSubmit)="reportIssue()"
       [formGroup]="editIssueForm">
@@ -35,7 +35,7 @@
     </span>
 -->
     <div formArrayName="imageUrls">
-        <div *ngFor="let imageUrl of imageUrls.controls; let i=index">
+        <div *ngFor="let imageUrl of imageUrls?.controls; let i=index">
             <mat-form-field>
                 <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
                 <input matInput
@@ -65,7 +65,7 @@
     </div>
     <button mat-raised-button
         type="button"
-        [disabled]="!imageUrls.valid"
+        [disabled]="!imageUrls?.valid"
         (click)="addImageUrl()">
         Add image
     </button>
@@ -101,10 +101,17 @@
                 [matChipInputAddOnBlur]="addOnBlur"
                 (matChipInputTokenEnd)="addTag($event)"
                 id="tagsId"
-                [ngClass]="{ 'is-invalid': tagsMessage }" />
+                [ngClass]="{ 'is-invalid': (editIssueForm.get('tags').touched || editIssueForm.get('tags').dirty) &&
+                                           (editIssueForm.get('tags').errors?.required ||
+                                            editIssueForm.get('tags').errors?.tagLength) }" />
         </mat-chip-list>
-        <mat-error>
-            {{ tagsMessage }}
+        <mat-error *ngIf="editIssueForm.get('tags').touched || editIssueForm.get('tags').dirty">
+            <span *ngIf="editIssueForm.get('tags').errors?.required">
+                Please enter at least one tag.
+            </span>
+            <span *ngIf="editIssueForm.get('tags').errors?.tagLength">
+                Each tag must contain from 2 to 25 characters.
+            </span>
         </mat-error>
     </mat-form-field>
 
@@ -126,7 +133,7 @@
         type="submit"
         [title]="editIssueForm.valid ? 'Submit' : 'Please complete the form'"
         [disabled]="!editIssueForm.valid">
-        Register
+        Update issue
     </button>
 
 </form>
