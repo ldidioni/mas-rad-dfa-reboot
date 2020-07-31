@@ -34,11 +34,6 @@ export class IssueEditComponent implements OnInit {
   issueTypes: IssueType[];
 
   errorMessage: string;
-  descriptionMessage: string;
-  imageUrlMessage: string;
-  issueTypeMessage: string;
-  tagsMessage: string;
-  locationMessage: string;
   mapClicked: boolean;
 
   tags: string[];
@@ -95,7 +90,7 @@ export class IssueEditComponent implements OnInit {
               this.editIssueForm.registerControl('imageUrls', new FormArray([control]));
             
               //this.imageUrls.push(new FormControl(this.issue.imageUrl, Validators.required));
-              const imageUrls = this.editIssueForm.get('imageUrls') as FormArray;
+              //const imageUrls = this.editIssueForm.get('imageUrls') as FormArray;
               this.imageUrls.setControl(0, new FormControl(this.issue.imageUrl, Validators.required));
 
               for(const additionalImageUrl of this.issue.additionalImageUrls) {
