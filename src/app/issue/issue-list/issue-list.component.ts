@@ -115,14 +115,6 @@ export class IssueListComponent implements OnInit {
     });
   }
 
-  editIssue(issue: Issue): void {
-    this.issueService.updateIssue(issue)
-        .subscribe({
-          next: () => this.onSaveComplete(),
-          //error: err => this.errorMessage = err
-      });
-  }
-
  /*  onDetailClick(id: string) {
     this.router.navigateByUrl(`issue/{id}`);
   } */

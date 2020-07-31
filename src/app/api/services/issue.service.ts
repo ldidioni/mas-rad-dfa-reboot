@@ -43,9 +43,9 @@ export class IssueService
     return this.http.post<Issue>(`${environment.apiUrl}/issues`, issueReq, { headers: headers });
   }
 
-  updateIssue(issue: Issue): Observable<Issue>
+  updateIssue(id: string, issueReq: IssueNewRequest): Observable<Issue>
   {
-    return this.http.patch<Issue>(`${environment.apiUrl}/issues/${issue.id}`, issue);
+    return this.http.patch<Issue>(`${environment.apiUrl}/issues/${id}`, issueReq);
   }
 
   initializeIssue(): Issue

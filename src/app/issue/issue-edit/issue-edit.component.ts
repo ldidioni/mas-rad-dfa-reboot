@@ -68,7 +68,7 @@ export class IssueEditComponent implements OnInit {
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
       issueType:    ['', [Validators.required]],
       //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
-      imageUrls:    this.formBuilder.array([this.buildImageUrl()]),
+      //imageUrls:    this.formBuilder.array([this.buildImageUrl()]),
       tags:         [this.tags, [Validators.required, checkTagLength]],
       location:     ['', [Validators.required]]
       //roles:      [{value: ['citizen'], disabled: true}]
@@ -92,12 +92,15 @@ export class IssueEditComponent implements OnInit {
 
               let control: FormControl = new FormControl(this.issue.imageUrl, Validators.required);
               this.editIssueForm.registerControl('imageUrls', new FormArray([control]));
-
+            
+              //this.imageUrls.push(new FormControl(this.issue.imageUrl, Validators.required));
+            
               for(const additionalImageUrl of this.issue.additionalImageUrls) {
                 this.imageUrls.push(new FormControl(additionalImageUrl, Validators.required));
               }
 
-              this.editIssueForm.controls['tags'].setValue(this.issue.tags);
+              this.tags = this.issue.tags;
+              //this.editIssueForm.controls['tags'].setValue(this.issue.tags);
               this.editIssueForm.get('location').setValue(this.issue.location);
 
               console.log(this.issue);
@@ -231,7 +234,7 @@ export class IssueEditComponent implements OnInit {
 
         console.log(this.issueNewRequest);
 
-        this.issueService.createIssue(this.issueNewRequest)
+        this.issueService.updateIssue(this.id, this.issueNewRequest)
           .subscribe({
             next: () => this.onCreationComplete(),
             error: err => this.errorMessage = err

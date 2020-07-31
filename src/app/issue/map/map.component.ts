@@ -11,6 +11,7 @@ import { GeolocationService } from 'src/app/shared/services/geolocation.service'
 export class MapComponent implements OnDestroy, AfterViewInit {
 
   @Input() mapPoints: Point[] = [];
+  @Input() center: Point;
   @Input() clickable: Boolean = true;
   @Output() location = new EventEmitter<[number, number]>();
 
@@ -29,8 +30,9 @@ export class MapComponent implements OnDestroy, AfterViewInit {
     shadowUrl: 'leaflet/marker-shadow.png'
   });
 
-  constructor(private geolocation: GeolocationService) { 
-    this.geolocation
+  constructor(private geolocation: GeolocationService) {
+    if(!this.center) {
+      this.geolocation
       .getCurrentPosition()
       .then((position) => {
         this.position = position;
@@ -39,6 +41,11 @@ export class MapComponent implements OnDestroy, AfterViewInit {
       .catch((error) => {
         console.warn('Failed to locate user because', error);
       });
+    }
+    else {
+      //this.position.coords = this.center.coordinates;
+    }
+    
   }
 
   ngOnDestroy(): void {
