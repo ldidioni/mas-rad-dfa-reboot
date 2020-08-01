@@ -7,35 +7,32 @@ import { IssueTypeService } from 'src/app/api/services/issue-type.service';
 import { IssueType } from 'src/app/models/issue-type';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { debounceTime } from 'rxjs/operators';
 
-function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null {
 
+function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null 
+{
   const hasExpectedLength = (tag: string) => 2 <= tag.length && tag.length <= 25;
 
-  if(c.value.every(hasExpectedLength)){
+  if(c.value.every(hasExpectedLength))
+  {
     return (null);
   }
   return {'tagLength': true};
 }
+
 
 @Component({
   selector: 'app-issue-new',
   templateUrl: './issue-new.component.html',
   styleUrls: ['./issue-new.component.scss']
 })
-export class IssueNewComponent implements OnInit {
-
+export class IssueNewComponent implements OnInit 
+{
   newIssueForm: FormGroup;
   issueNewRequest: IssueNewRequest;
   issueTypes: IssueType[];
 
   errorMessage: string;
-  descriptionMessage: string;
-  imageUrlMessage: string;
-  issueTypeMessage: string;
-  tagsMessage: string;
-  locationMessage: string;
   mapClicked: boolean;
 
   tags: string[];
@@ -48,13 +45,15 @@ export class IssueNewComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private issueTypeService: IssueTypeService,
-              private issueService: IssueService) {
+              private issueService: IssueService) 
+  {
     this.tags = [];
     this.issueNewRequest = new IssueNewRequest();
     this.mapClicked = false;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     this.getAllIssueTypes();
     this.newIssueForm = this.formBuilder.group({
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
@@ -67,48 +66,10 @@ export class IssueNewComponent implements OnInit {
     });
 
     this.newIssueForm.controls['tags'].setValue(this.tags);
-
-/*     this.newIssueForm.get('issueType').valueChanges.subscribe(item => {
-      this.issueTypes = item.issueTypes
-    }); */
-
-    const descriptionControl = this.newIssueForm.get('description');
-    descriptionControl.valueChanges.pipe(
-      debounceTime(1000)
-    ).subscribe(
-      value => this.setDescriptionMessage(descriptionControl)
-    );
-
-    const issueTypeControl = this.newIssueForm.get('issueType');
-    issueTypeControl.valueChanges.pipe(
-      debounceTime(1000)
-    ).subscribe(
-      value => this.setIssueTypeMessage(issueTypeControl)
-    );
-
-    const imageUrlsControl = this.newIssueForm.get('imageUrls');
-    /* imageUrlsControl.valueChanges.pipe(
-      debounceTime(1000)
-    ).subscribe(
-      value => this.setImageUrlsMessage(imageUrlsControl)
-    ); */
-
-    const tagsControl = this.newIssueForm.get('tags');
-    tagsControl.valueChanges.pipe(
-      debounceTime(1000)
-    ).subscribe(
-      value => this.setTagsMessage(tagsControl)
-    );
-
-    const locationControl = this.newIssueForm.get('location');
-    locationControl.valueChanges.pipe(
-      debounceTime(1000)
-    ).subscribe(
-      value => this.setLocationMessage(locationControl)
-    );
   }
 
-  buildImageUrl(): FormControl {
+  buildImageUrl(): FormControl 
+  {
     //return this.formBuilder.control({
     //  imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
   //});
@@ -116,54 +77,35 @@ export class IssueNewComponent implements OnInit {
     '', [Validators.required, Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|png)$')]);
   }
 
-  get imageUrl(): FormControl {
+  get imageUrl(): FormControl 
+  {
     if(this.newIssueForm) {
       return <FormControl>this.newIssueForm.get('imageUrl');
     }
     return null;
   }
 
-  get imageUrls(): FormArray {
+  get imageUrls(): FormArray 
+  {
     if(this.newIssueForm) {
       return <FormArray>this.newIssueForm.get('imageUrls');
     }
     return null;
   }
 
-  addImageUrl(): void {
+  addImageUrl(): void 
+  {
     this.imageUrls.push(this.buildImageUrl());
   }
 
-  getAllIssueTypes(): void {
+  getAllIssueTypes(): void 
+  {
     this.issueTypeService.loadAllIssueTypes()
         .subscribe({
             next: (issueTypes: IssueType[]) => this.issueTypes = issueTypes,
             //error: err => this.errorMessage = err
         });
   }
-
-  private descriptionValidationMessages = {
-    required: 'Please enter a description.',
-    maxlength: 'The description must contain at most 1000 characters.'
-  };
-
-  private issueTypeValidationMessages = {
-    required: 'Please select a type for the issue.'
-  };
-
-  private imageUrlValidationMessages = {
-    required: 'Please enter an image URL.',
-    pattern: 'The image URL is not valid.'
-  };
-
-  private tagsValidationMessages = {
-    required: 'Please enter at least one tag.',
-    tagLength: 'Each tag must contain from 2 to 25 characters.'
-  };
-
-  private locationValidationMessages = {
-    required: 'Please click the map to set a location for the issue.'
-  };
 
 /*   setNotification(notifyVia: string): void {
     //TODO
@@ -195,7 +137,8 @@ export class IssueNewComponent implements OnInit {
     }
   } */
 
-  addTag(event: MatChipInputEvent) {
+  addTag(event: MatChipInputEvent) 
+  {
     const input = event.input;
     const value = event.value;
     if ((value.trim() !== '')) {
@@ -226,7 +169,8 @@ export class IssueNewComponent implements OnInit {
     }
   } */
 
-  removeTag(tag: string): void {
+  removeTag(tag: string): void 
+  {
     //let controller = this.newIssueForm.controls['tags'];
     const index = this.tags.indexOf(tag);
 
@@ -237,11 +181,13 @@ export class IssueNewComponent implements OnInit {
     }
   }
 
-  removeImageUrl(index: number): void {
+  removeImageUrl(index: number): void 
+  {
     this.imageUrls.removeAt(index);
   }
 
-  reportIssue(): void {
+  reportIssue(): void 
+  {
     if (this.newIssueForm.valid) {
       if (this.newIssueForm.dirty) {
 
@@ -268,62 +214,19 @@ export class IssueNewComponent implements OnInit {
     }
   }
 
-  onCreationComplete(): void {
+  onCreationComplete(): void 
+  {
     // Reset the form to clear the flags
     this.newIssueForm.reset();
     //this.router.navigate(['/issues']);
   }
 
-  onLocationSet($event): void {
+  onLocationSet($event): void 
+  {
     console.log($event);
     this.mapClicked = true;
     this.newIssueForm.get('location').setValue(new Point($event));
     //this.issueNewRequest.location = new Point($event);
-  }
-
-  setDescriptionMessage(c: AbstractControl): void {
-    this.descriptionMessage = '';
-    if((c.touched || c.dirty) && c.errors) {
-      console.log(c.errors);
-      this.descriptionMessage = Object.keys(c.errors).map(
-        key => this.descriptionValidationMessages[key]).join(' ');
-    }
-  }
-
-  setIssueTypeMessage(c: AbstractControl): void {
-    this.issueTypeMessage = '';
-    if((c.touched || c.dirty) && c.errors) {
-      console.log(c.errors);
-      this.issueTypeMessage = Object.keys(c.errors).map(
-        key => this.issueTypeValidationMessages[key]).join(' ');
-    }
-  }
-
-/*   setImageUrlsMessage(c: AbstractControl): void {
-    this.imageUrlMessage = '';
-    if((c.touched || c.dirty) && c.errors) {
-      console.log(c.errors);
-      this.imageUrlMessage = Object.keys(c.errors).map(
-        key => this.imageUrlValidationMessages[key]).join(' ');
-    }
-  } */
-
-  setTagsMessage(c: AbstractControl): void {
-    this.tagsMessage = '';
-    if((c.touched || c.dirty) && c.errors) {
-      console.log(c.errors);
-      this.tagsMessage = Object.keys(c.errors).map(
-        key => this.tagsValidationMessages[key]).join(' ');
-    }
-  }
-
-  setLocationMessage(c: AbstractControl): void {
-    this.locationMessage = '';
-    if((c.touched || c.dirty) && c.errors) {
-      console.log(c.errors);
-      this.locationMessage = Object.keys(c.errors).map(
-        key => this.locationValidationMessages[key]).join(' ');
-    }
   }
 
 /*
