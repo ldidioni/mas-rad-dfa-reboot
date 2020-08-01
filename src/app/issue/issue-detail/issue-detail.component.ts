@@ -7,6 +7,8 @@ import { Issue, Point } from 'src/app/models/issue';
 import { IssueCommentService } from 'src/app/api/services/issue-comment.service';
 import { IssueComment } from 'src/app/models/issue-comment';
 import { IssueCommentRequest } from 'src/app/models/issue-comment-request';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ImageModalComponent } from '../image-modal/image-modal.component';
 
 @Component({
   selector: 'app-issue-detail',
@@ -24,7 +26,8 @@ export class IssueDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private issueService: IssueService,
-              private issueCommentService: IssueCommentService) { 
+              private issueCommentService: IssueCommentService,
+              public matDialog: MatDialog) { 
     this.newCommentReq = new IssueCommentRequest();
   }
 
@@ -75,5 +78,17 @@ export class IssueDetailComponent implements OnInit {
         },
       });
     }
+  }
+
+  openModal(imageUrl: string) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    //dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = "350px";
+    dialogConfig.width = "600px";
+    dialogConfig.data = {'imageUrl': imageUrl};
+    // https://material.angular.io/components/dialog/overview
+    const modalDialog = this.matDialog.open(ImageModalComponent, dialogConfig);
   }
 }
