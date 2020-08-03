@@ -2,26 +2,28 @@
 <form novalidate
       (ngSubmit)="reportIssue()"
       [formGroup]="newIssueForm">
-    <mat-form-field>
-        <mat-label for="descriptionId">Description</mat-label>
-        <input matInput
-            id="descriptionId"
-            type="text"
-            placeholder="Description (required)"
-            formControlName="description"
-            [ngClass]="{ 'is-invalid': (newIssueForm.get('description').touched || newIssueForm.get('description').dirty) &&
-                                       (newIssueForm.get('description').errors?.required ||
-                                        newIssueForm.get('description').errors?.pattern)  }" />
-        <mat-error *ngIf="newIssueForm.get('description').touched || newIssueForm.get('description').dirty">
-            <span  *ngIf="newIssueForm.get('description').errors?.required">
-                Please enter a description.
-            </span>
-            <span *ngIf="newIssueForm.get('description').errors?.maxlength">
-                The description must contain at most 1000 characters.
-            </span>
-        </mat-error>
-    </mat-form-field>
-<!--
+    <div class="row">
+        <mat-form-field>
+            <mat-label for="descriptionId">Description</mat-label>
+            <input matInput
+                id="descriptionId"
+                type="text"
+                placeholder="Description (required)"
+                formControlName="description"
+                [ngClass]="{ 'is-invalid': (newIssueForm.get('description').touched || newIssueForm.get('description').dirty) &&
+                                        (newIssueForm.get('description').errors?.required ||
+                                            newIssueForm.get('description').errors?.pattern)  }" />
+            <mat-error *ngIf="newIssueForm.get('description').touched || newIssueForm.get('description').dirty">
+                <span  *ngIf="newIssueForm.get('description').errors?.required">
+                    Please enter a description.
+                </span>
+                <span *ngIf="newIssueForm.get('description').errors?.maxlength">
+                    The description must contain at most 1000 characters.
+                </span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+        <!--
     <label for="imageUrlId">Image URL</label>
     <input
         id="imageUrlId"
@@ -51,7 +53,7 @@
                     mat-raised-button
                     type="button"
                     (click)="removeImageUrl(i)">
-                    X
+                    <mat-icon>delete_forever</mat-icon>
                 </button>
             </div>
             <mat-error *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty)">
@@ -67,58 +69,61 @@
             </mat-error>
         </div>
     </div>
-    <button mat-raised-button
-        type="button"
-        [disabled]="!imageUrls.valid"
-        (click)="addImageUrl()">
-        Add image
-    </button>
-
-    <mat-form-field>
-        <mat-label for="typeId">Type</mat-label>
-        <mat-select
-            id="typeId"
-            formControlName="issueType">
-            <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.href">
-                {{ issueType.name }}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="newIssueForm.get('issueType').touched || newIssueForm.get('issueType').dirty">
-            <span *ngIf="newIssueForm.get('issueType').errors?.required">
-                Please select a type for the issue.
-            </span>
-        </mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-        <mat-chip-list #chipList formControlName="tags">
-            <mat-label for="tagsId">Tags</mat-label>
-            <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
-                [removable]="removable" (removed)="removeTag(tag)">
-                {{tag}}
-                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-            </mat-chip>
-            <input
-                placeholder="New Tag..."
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="addTag($event)"
-                id="tagsId"
-                [ngClass]="{ 'is-invalid': (newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty) &&
-                                           (newIssueForm.get('tags').errors?.required ||
-                                            newIssueForm.get('tags').errors?.tagLength) }" />
-        </mat-chip-list>
-        <mat-error *ngIf="newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty">
-            <span *ngIf="newIssueForm.get('tags').errors?.required">
-                Please enter at least one tag.
-            </span>
-            <span *ngIf="newIssueForm.get('tags').errors?.tagLength">
-                Each tag must contain from 2 to 25 characters.
-            </span>
-        </mat-error>
-    </mat-form-field>
-
+    <div class="row">
+        <button mat-raised-button
+            type="button"
+            [disabled]="!imageUrls.valid"
+            (click)="addImageUrl()">
+            Add image
+        </button>
+    </div>
+    <div class="row">
+        <mat-form-field>
+            <mat-label for="typeId">Type</mat-label>
+            <mat-select
+                id="typeId"
+                formControlName="issueType">
+                <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.href">
+                    {{ issueType.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="newIssueForm.get('issueType').touched || newIssueForm.get('issueType').dirty">
+                <span *ngIf="newIssueForm.get('issueType').errors?.required">
+                    Please select a type for the issue.
+                </span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field>
+            <mat-chip-list #chipList formControlName="tags">
+                <mat-label for="tagsId">Tags</mat-label>
+                <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                    [removable]="removable" (removed)="removeTag(tag)">
+                    {{tag}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                    placeholder="New Tag..."
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addTag($event)"
+                    id="tagsId"
+                    [ngClass]="{ 'is-invalid': (newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty) &&
+                                            (newIssueForm.get('tags').errors?.required ||
+                                                newIssueForm.get('tags').errors?.tagLength) }" />
+            </mat-chip-list>
+            <mat-error *ngIf="newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty">
+                <span *ngIf="newIssueForm.get('tags').errors?.required">
+                    Please enter at least one tag.
+                </span>
+                <span *ngIf="newIssueForm.get('tags').errors?.tagLength">
+                    Each tag must contain from 2 to 25 characters.
+                </span>
+            </mat-error>
+        </mat-form-field>
+    </div>
   <!--  <app-issue-map
         (location)="onLocationSet">
     </app-issue-map>-->

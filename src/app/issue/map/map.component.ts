@@ -8,14 +8,14 @@ import { GeolocationService } from 'src/app/shared/services/geolocation.service'
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnDestroy, AfterViewInit {
+export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Input() mapPoints: Point[] = [];
   @Input() center: Point;
   @Input() clickable: Boolean = true;
   @Output() location = new EventEmitter<[number, number]>();
 
-  map;
+  map: L.Map;
   position: Position;
 
   smallIcon = new L.Icon({
@@ -51,6 +51,10 @@ export class MapComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.map.remove();
   }
+/* 
+  onMapReady(map: L.Map) {
+    this.map = map;
+  } */
 
   ngAfterViewInit(): void {
     this.geolocation
@@ -59,6 +63,7 @@ export class MapComponent implements OnDestroy, AfterViewInit {
       this.position = position;
       this.createMap(this.position);
       console.log(this.position);
+      this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
     })
     //this.createMap();
   }

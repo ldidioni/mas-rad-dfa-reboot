@@ -3,7 +3,7 @@
 <form novalidate
       (ngSubmit)="reportIssue()"
       [formGroup]="editIssueForm">
-    <mat-form-field>
+    <mat-form-field class="row">
         <mat-label for="descriptionId">Description</mat-label>
         <input matInput
             id="descriptionId"
@@ -36,23 +36,25 @@
 -->
     <div formArrayName="imageUrls">
         <div *ngFor="let imageUrl of imageUrls?.controls; let i=index">
-            <mat-form-field>
-                <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
-                <input matInput
-                    id="{{ 'ImageUrl' + i }}"
-                    type="text"
-                    [formControlName]="i"
-                    placeholder="ImageUrl URL"
-                    [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
-                                               (imageUrls.controls[i].errors?.required ||
-                                                imageUrls.controls[i].errors?.pattern) }"/>
-            </mat-form-field>
-            <button *ngIf="i > 0"
-                mat-raised-button
-                type="button"
-                (click)="removeImageUrl(i)">
-                X
-            </button>
+            <div class="row">
+                <mat-form-field class="col-10">
+                    <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
+                    <input matInput
+                        id="{{ 'ImageUrl' + i }}"
+                        type="text"
+                        [formControlName]="i"
+                        placeholder="ImageUrl URL"
+                        [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
+                                                (imageUrls.controls[i].errors?.required ||
+                                                    imageUrls.controls[i].errors?.pattern) }"/>
+                </mat-form-field>
+                <button *ngIf="i > 0"
+                    mat-raised-button
+                    type="button"
+                    (click)="removeImageUrl(i)">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+            </div>
             <mat-error *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty)">
                 <span *ngIf="imageUrls.controls[i].errors?.required">
                     Please enter an image URL
@@ -66,14 +68,15 @@
             </mat-error>
         </div>
     </div>
-    <button mat-raised-button
-        type="button"
-        [disabled]="!imageUrls?.valid"
-        (click)="addImageUrl()">
-        Add image
-    </button>
-
-    <mat-form-field>
+    <div class="row">
+        <button mat-raised-button
+            type="button"
+            [disabled]="!imageUrls?.valid"
+            (click)="addImageUrl()">
+            Add image
+        </button>
+    </div>
+    <mat-form-field class="row">
         <mat-label for="typeId">Type</mat-label>
         <mat-select
             id="typeId"
@@ -89,7 +92,7 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="row">
         <mat-chip-list #chipList formControlName="tags">
             <mat-label for="tagsId">Tags</mat-label>
             <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
@@ -125,7 +128,7 @@
     <app-map
         [mapPoints]="issuePoint"
         [clickable]="true"
-        (location)="onLocationSet($event)">
+        >
     </app-map>
 
     <button
