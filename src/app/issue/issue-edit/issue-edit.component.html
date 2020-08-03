@@ -57,6 +57,9 @@
                 <span *ngIf="imageUrls.controls[i].errors?.required">
                     Please enter an image URL
                 </span>
+                <span *ngIf="imageUrls.controls[i].errors?.maxlength">
+                    The image URL must contain at most 500 characters.
+                </span>
                 <span *ngIf="imageUrls.controls[i].errors?.pattern">
                     The image URL is not valid.
                 </span>
@@ -120,13 +123,10 @@
     </app-issue-map>-->
 
     <app-map
-        [mapPoints]="[]"
+        [mapPoints]="issuePoint"
         [clickable]="true"
         (location)="onLocationSet($event)">
     </app-map>
-    <mat-error *ngIf="!this.mapClicked">
-        Please click the map to set a location for the issue.
-    </mat-error>
 
     <button
         mat-raised-button color="primary"

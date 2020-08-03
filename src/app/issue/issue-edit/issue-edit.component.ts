@@ -82,7 +82,7 @@ export class IssueEditComponent implements OnInit {
         .subscribe({
             next: (issue: Issue) => {
               this.issue = issue;
-              this.issuePoint.push(new Point(issue.location.coordinates));
+              this.issuePoint.push(new Point(this.issue.location.coordinates));
               this.editIssueForm.get('issueType').setValue(this.issue.issueTypeHref);
               this.editIssueForm.get('description').setValue(this.issue.description);
 
@@ -115,7 +115,7 @@ export class IssueEditComponent implements OnInit {
     //  imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
   //});
   return new FormControl(
-    '', [Validators.required, Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|png)$')]);
+    '', [Validators.required, Validators.maxLength(500), Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$')]);
   }
 
   get imageUrl(): FormControl {

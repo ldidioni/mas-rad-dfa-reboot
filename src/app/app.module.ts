@@ -26,8 +26,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatDialogModule} from '@angular/material/dialog';
 import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
 import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
+import { ImageModalComponent } from './issue/image-modal/image-modal.component';
 
 
 
@@ -41,7 +43,8 @@ import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
     IssueNewComponent,
     IssueListComponent,
     IssueDetailComponent,
-    IssueEditComponent
+    IssueEditComponent,
+    ImageModalComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,7 @@ import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
     SecurityModule,
     LeafletModule,
     MatButtonModule,
+    MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
     MatPaginatorModule,
@@ -69,6 +73,7 @@ import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
       multi: true,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ImageModalComponent]
 })
 export class AppModule { }
