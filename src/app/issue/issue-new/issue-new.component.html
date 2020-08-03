@@ -35,23 +35,25 @@
 -->
     <div formArrayName="imageUrls">
         <div *ngFor="let imageUrl of imageUrls.controls; let i=index">
-            <mat-form-field>
-                <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
-                <input matInput
-                    id="{{ 'ImageUrl' + i }}"
-                    type="text"
-                    [formControlName]="i"
-                    placeholder="ImageUrl URL"
-                    [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
-                                               (imageUrls.controls[i].errors?.required ||
-                                                imageUrls.controls[i].errors?.pattern) }"/>
-            </mat-form-field>
-            <button *ngIf="i > 0"
-                mat-raised-button
-                type="button"
-                (click)="removeImageUrl(i)">
-                X
-            </button>
+            <div class="row">
+                <mat-form-field class="col-10">
+                    <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
+                    <input matInput
+                        id="{{ 'ImageUrl' + i }}"
+                        type="text"
+                        [formControlName]="i"
+                        placeholder="ImageUrl URL"
+                        [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
+                                                (imageUrls.controls[i].errors?.required ||
+                                                    imageUrls.controls[i].errors?.pattern) }"/>
+                </mat-form-field>
+                <button *ngIf="i > 0"
+                    mat-raised-button
+                    type="button"
+                    (click)="removeImageUrl(i)">
+                    X
+                </button>
+            </div>
             <mat-error *ngIf="(imageUrls.controls[i].touched || imageUrls.controls[i].dirty)">
                 <span *ngIf="imageUrls.controls[i].errors?.required">
                     Please enter an image URL
