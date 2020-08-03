@@ -12,7 +12,7 @@
             formControlName="description"
             [ngClass]="{ 'is-invalid': (editIssueForm.get('description').touched || editIssueForm.get('description').dirty) &&
                                        (editIssueForm.get('description').errors?.required ||
-                                        editIssueForm.get('description').errors?.pattern)  }" />
+                                        editIssueForm.get('description').errors?.maxlength) }" />
         <mat-error *ngIf="editIssueForm.get('description').touched || editIssueForm.get('description').dirty">
             <span  *ngIf="editIssueForm.get('description').errors?.required">
                 Please enter a description.
@@ -45,7 +45,8 @@
                         [formControlName]="i"
                         placeholder="ImageUrl URL"
                         [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
-                                                (imageUrls.controls[i].errors?.required ||
+                                                   (imageUrls.controls[i].errors?.required ||
+                                                    imageUrls.controls[i].errors?.maxlength ||
                                                     imageUrls.controls[i].errors?.pattern) }"/>
                 </mat-form-field>
                 <button *ngIf="i > 0"

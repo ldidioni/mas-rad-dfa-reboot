@@ -11,8 +11,8 @@
                 placeholder="Description (required)"
                 formControlName="description"
                 [ngClass]="{ 'is-invalid': (newIssueForm.get('description').touched || newIssueForm.get('description').dirty) &&
-                                        (newIssueForm.get('description').errors?.required ||
-                                            newIssueForm.get('description').errors?.pattern)  }" />
+                                           (newIssueForm.get('description').errors?.required ||
+                                            newIssueForm.get('description').errors?.maxlength)  }" />
             <mat-error *ngIf="newIssueForm.get('description').touched || newIssueForm.get('description').dirty">
                 <span  *ngIf="newIssueForm.get('description').errors?.required">
                     Please enter a description.
@@ -46,7 +46,8 @@
                         [formControlName]="i"
                         placeholder="ImageUrl URL"
                         [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
-                                                (imageUrls.controls[i].errors?.required ||
+                                                   (imageUrls.controls[i].errors?.required ||
+                                                   (imageUrls.controls[i].errors?.maxlength ||
                                                     imageUrls.controls[i].errors?.pattern) }"/>
                 </mat-form-field>
                 <button *ngIf="i > 0"
@@ -111,7 +112,7 @@
                     (matChipInputTokenEnd)="addTag($event)"
                     id="tagsId"
                     [ngClass]="{ 'is-invalid': (newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty) &&
-                                            (newIssueForm.get('tags').errors?.required ||
+                                               (newIssueForm.get('tags').errors?.required ||
                                                 newIssueForm.get('tags').errors?.tagLength) }" />
             </mat-chip-list>
             <mat-error *ngIf="newIssueForm.get('tags').touched || newIssueForm.get('tags').dirty">
@@ -146,7 +147,6 @@
     </button>
 
 </form>
-
 
 <p>
     Form value: {{ newIssueForm.value | json }}
