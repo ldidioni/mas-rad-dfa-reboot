@@ -47,7 +47,7 @@
                         placeholder="ImageUrl URL"
                         [ngClass]="{ 'is-invalid': (imageUrls.controls[i].touched || imageUrls.controls[i].dirty) &&
                                                    (imageUrls.controls[i].errors?.required ||
-                                                   (imageUrls.controls[i].errors?.maxlength ||
+                                                    imageUrls.controls[i].errors?.maxlength ||
                                                     imageUrls.controls[i].errors?.pattern) }"/>
                 </mat-form-field>
                 <button *ngIf="i > 0"
