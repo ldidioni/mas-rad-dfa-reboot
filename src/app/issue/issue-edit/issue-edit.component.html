@@ -129,7 +129,7 @@
     <app-map
         [mapPoints]="issuePoint"
         [clickable]="true"
-        >
+        (location)="onLocationSet($event)">
     </app-map>
 
     <button
