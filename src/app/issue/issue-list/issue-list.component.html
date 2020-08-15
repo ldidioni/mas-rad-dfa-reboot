@@ -7,10 +7,22 @@
             id="types"
             [multiple]="true"
             formControlName="issueTypes">
-            <mat-option *ngFor="let issueType of issueTypes" [value]="issueType">
-                {{ issueType }}
+            <mat-option *ngFor="let issueTypeObject of issueTypeObjects" [value]="issueTypeObject.id">
+                {{ issueTypeObject.name }}
             </mat-option>
         </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label for="creators">Creators</mat-label>
+      <mat-select
+          id="creators"
+          [multiple]="true"
+          formControlName="issueCreators">
+          <mat-option *ngFor="let issueCreatorObject of issueCreatorObjects" [value]="issueCreatorObject.id">
+              {{ issueCreatorObject.name }}
+          </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field>

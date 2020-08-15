@@ -22,14 +22,22 @@ export class IssueListComponent implements OnInit {
   issueTypes: string[];
   issueStates: string[];
   issueTags: string[];
+  issueTypeObjects: any[];
+  issueCreatorObjects: any;
+  issueCreators: any;
 
   queryObject: any;
 
   issuesFilterForm: FormGroup;
 
+
   constructor(private issueService: IssueService,
               private formBuilder: FormBuilder,
-              private router: Router) { }
+              private router: Router)
+  {
+    this.issueTypes = [];
+    this.issueCreators = [];
+  }
 
   ngOnInit(): void {
     this.getAllIssues();
@@ -37,14 +45,16 @@ export class IssueListComponent implements OnInit {
 
     this.issuesFilterForm = this.formBuilder.group({
       issueTypes:  '',
+      issueCreators:  '',
       issueStates: '',
       tags:        '',
       location:    ''
     });
 
-    this.queryObject = {state: {"$in": [ ]},
-                        type: {"$in": [ ]},
-                        tags: {"$in": [ ]}};
+    this.queryObject = {issueType: {"$in": [ ]},
+                        creator: {"$in": [ ]}
+                      };
+
     this.onChanges();
   }
 
@@ -55,9 +65,45 @@ export class IssueListComponent implements OnInit {
               this.issues = issues;
               this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
 
-              // To populate issue type filter
-              let issueTypeNames = issues.map((issue: Issue) => issue.issueType.name);
-              this.issueTypes = [...new Set(issueTypeNames)];
+              // To populate issue type filter (search type)
+              this.issueTypeObjects = issues.map((issue: Issue) => issue.issueType);
+
+              this.issueTypeObjects = Object.values(
+                this.issueTypeObjects.reduce( (c, e) => {
+                  if (!c[e.name]) c[e.name] = e;
+                  return c;
+                }, {})
+              );
+
+              console.log(this.issueTypeObjects);
+
+              for(let issueTypeObject of this.issueTypeObjects)
+              {
+                this.issueTypes.push(issueTypeObject.id);
+              }
+              this.issueTypes = [...new Set(this.issueTypes)];
+
+              console.log(this.issueTypes);
+
+              // To populate creator filter (search type)
+              this.issueCreatorObjects = issues.map((issue: Issue) => issue.creator);
+
+              this.issueCreatorObjects = Object.values(
+                this.issueCreatorObjects.reduce( (c, e) => {
+                  if (!c[e.name]) c[e.name] = e;
+                  return c;
+                }, {})
+              );
+
+              console.log(this.issueCreatorObjects);
+
+              for(let issueCreatorObject of this.issueCreatorObjects)
+              {
+                this.issueCreators.push(issueCreatorObject.id);
+              }
+              this.issueCreators = [...new Set(this.issueCreators)];
+
+              console.log(this.issueCreators);
 
               // To populate issue state filter
               let states = issues.map((issue: Issue) => issue.state);
@@ -67,9 +113,9 @@ export class IssueListComponent implements OnInit {
               let tags = issues.map((issue: Issue) => issue.tags);
               this.issueTags = [...new Set(...tags)];
 
-              this.queryObject["type"]["$in"] = [...this.issueTypes];
-              this.queryObject["state"]["$in"] = [...this.issueStates];
-              this.queryObject["tags"]["$in"] = [...this.issueTags];
+              this.queryObject["issueType"]["$in"] = [...this.issueTypes];
+              //this.queryObject["state"]["$in"] = [...this.issueStates];
+              //this.queryObject["tags"]["$in"] = [...this.issueTags];
 
               console.log(this.issues);
               console.log(this.issuePoints);},
@@ -81,16 +127,20 @@ export class IssueListComponent implements OnInit {
     this.issuesFilterForm.valueChanges.subscribe(settings => {
       if(settings.issueTypes)
       {
-        this.queryObject["type"]["$in"] = [...settings.issueTypes];
+        this.queryObject["issueType"]["$in"] = [...settings.issueTypes];
       }
-      if(settings.issueStates)
+      if(settings.issueCreators)
+      {
+        this.queryObject["creator"]["$in"] = [...settings.issueCreators];
+      }
+/*       if(settings.issueStates)
       {
         this.queryObject["state"]["$in"] = [...settings.issueStates];
       }
       if(settings.issueTags)
       {
         this.queryObject["tags"]["$in"] = [...settings.issueTags];
-      }
+      } */
       console.log(this.queryObject);
       this.filterIssues(this.queryObject);
 
