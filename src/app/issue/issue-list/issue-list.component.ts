@@ -110,9 +110,20 @@ export class IssueListComponent implements OnInit {
               this.issueStates = [...new Set(states)];
 
               // To populate issue tags filter
-              let tags = issues.map((issue: Issue) => issue.tags);
-              this.issueTags = [...new Set(...tags)];
+              let tagArrays = issues.map((issue: Issue) => issue.tags);
+              console.log(tagArrays);
+              let tags: string[] = [];
 
+              for (let tagArray of tagArrays)
+              {
+                tags.push(...tagArray);
+              }
+              console.log(tags);
+
+              this.issueTags = [...new Set(tags)];
+              console.log(this.issueTags);
+
+              this.queryObject["creator"]["$in"] = [...this.issueCreators];
               this.queryObject["issueType"]["$in"] = [...this.issueTypes];
               //this.queryObject["state"]["$in"] = [...this.issueStates];
               //this.queryObject["tags"]["$in"] = [...this.issueTags];
@@ -133,37 +144,50 @@ export class IssueListComponent implements OnInit {
       {
         this.queryObject["creator"]["$in"] = [...settings.issueCreators];
       }
-/*       if(settings.issueStates)
-      {
-        this.queryObject["state"]["$in"] = [...settings.issueStates];
-      }
-      if(settings.issueTags)
+
+      this.searchIssues(this.queryObject);
+
+/*      if(settings.issueTags)
       {
         this.queryObject["tags"]["$in"] = [...settings.issueTags];
       } */
-      console.log(this.queryObject);
-      this.filterIssues(this.queryObject);
+      //console.log(this.queryObject);
+      //this.searchIssues(this.queryObject);
 
     });
   }
 
-  filterIssues(queryObject: any) {
+  searchIssues(queryObject: any) {
     this.issueService.searchIssues(queryObject)
       .subscribe({
           next: (issues: Issue[]) => {
             this.issues = issues;
-            this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
+            this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
+
+            if(this.issuesFilterForm.get("issueStates").value)
+            {
+              console.log(this.issues);
+              this.issues = this.issues.filter(issue => [...this.issuesFilterForm.get("issueStates").value].includes(issue.state));
+              console.log(this.issues);
+            }
+            if(this.issuesFilterForm.get("tags").value)
+            {
+              console.log(this.issues);
+              this.issues = this.issues.filter(issue => issue.tags.filter(tag => [...this.issuesFilterForm.get("tags").value].includes(tag)));
+              console.log(this.issues);
+            }
           }
         });
   }
 
-  searchIssues(event: LeafletMouseEvent, radius: number) {
+
+/*   searchIssues(event: LeafletMouseEvent, radius: number) {
     this.issuePoints = this.issuePoints.filter((issuePoint: Point) => {
       event.latlng.distanceTo(L.latLng(
         issuePoint.coordinates[1],
         issuePoint.coordinates[0])) < radius;
     });
-  }
+  } */
 
  /*  onDetailClick(id: string) {
     this.router.navigateByUrl(`issue/{id}`);
