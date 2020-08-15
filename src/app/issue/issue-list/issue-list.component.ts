@@ -136,11 +136,27 @@ export class IssueListComponent implements OnInit {
 
   onChanges(): void {
     this.issuesFilterForm.valueChanges.subscribe(settings => {
-      if(settings.issueTypes)
+      console.log(settings.issueTypes);
+      console.log(settings.issueCreators);
+      // No issue types selected
+      if(!settings.issueTypes || settings.issueTypes.length === 0)
+      {
+        this.queryObject["issueType"]["$in"] = [...this.issueTypes];
+        //console.log("no filtering");
+      }
+      // Some issue types selected
+      else
       {
         this.queryObject["issueType"]["$in"] = [...settings.issueTypes];
+        //console.log("filtering!!!");
       }
-      if(settings.issueCreators)
+      // No creators selected
+      if(!settings.issueCreators || settings.issueCreators.length === 0)
+      {
+        this.queryObject["creator"]["$in"] = [...this.issueCreators];
+      }
+      // Some creators selected
+      else
       {
         this.queryObject["creator"]["$in"] = [...settings.issueCreators];
       }
