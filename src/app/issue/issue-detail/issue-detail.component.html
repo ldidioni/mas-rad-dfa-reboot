@@ -48,28 +48,34 @@ location: Point;
                     <div class="col-md-6">{{issue.tags}}</div>
                 </div>
             </div>
-  
-            <div class="col-md-4"
-                *ngIf="issue.imageUrl">
-              <a 
-                style="cursor: pointer" 
-                (click)="openModal(issue.imageUrl)">
-                <img class="center-block img-responsive"
-                  [style.height.px]="150"
-                  [style.margin.px]="2"
-                  [src]="issue.imageUrl">
-              </a>
-            </div>
-            <div class="col-md-4"
-                *ngFor="let imageUrl of issue.additionalImageUrls">
-              <a 
-                style="cursor: pointer" 
-                (click)="openModal(imageUrl)">
-                <img class="center-block img-responsive"
-                  [style.height.px]="150"
-                  [style.margin.px]="2"
-                  [src]="imageUrl">
-              </a>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <mat-card class="col-md-4"
+                      *ngIf="issue.imageUrl">
+                    <a 
+                      style="cursor: pointer" 
+                      (click)="openModal(issue.imageUrl)">
+                      <img class="center-block img-responsive"
+                        [style.height.px]="150"
+                        [style.margin.px]="2"
+                        [src]="issue.imageUrl">
+                    </a>
+                  </mat-card>
+
+                  <mat-card class="col-md-4"
+                      *ngFor="let imageUrl of issue.additionalImageUrls">
+                    <a 
+                      style="cursor: pointer" 
+                      (click)="openModal(imageUrl)">
+                      <img class="center-block img-responsive"
+                        [style.height.px]="150"
+                        [style.margin.px]="2"
+                        [src]="imageUrl">
+                    </a>
+                  </mat-card>
+                </div>
+              </div>
             </div>
       </div>
 
