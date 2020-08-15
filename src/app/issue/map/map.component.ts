@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, OnInit, OnDestroy, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 import { Point } from 'src/app/models/issue';
 import { GeolocationService } from 'src/app/shared/services/geolocation.service';
@@ -17,6 +17,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   map: L.Map;
   position: Position;
+  markers: any[];
 
   smallIcon = new L.Icon({
     // This define the displayed icon size, in pixel
@@ -45,13 +46,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     else {
       //this.position.coords = this.center.coordinates;
     }
-    
+
   }
 
   ngOnDestroy(): void {
     this.map.remove();
   }
-/* 
+/*
   onMapReady(map: L.Map) {
     this.map = map;
   } */
@@ -63,13 +64,32 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.position = position;
       this.createMap(this.position);
       console.log(this.position);
-      this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
+      this.mapPoints.forEach((point) => {
+        let marker = this.buildMarker(point)
+        marker.addTo(this.map);
+        this.markers.push(marker);
+      });
     })
     //this.createMap();
   }
 
-  ngOnChanges() {
-    this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
+  ngOnChanges(changes: SimpleChanges) {
+
+    for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
+    {
+      this.map.removeLayer(this.markers[i]);
+    }
+
+    this.markers = [];
+
+    this.mapPoints = changes.mapPoints.currentValue;
+    //this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
+
+    this.mapPoints.forEach((point) => {
+      let marker = this.buildMarker(point)
+      marker.addTo(this.map);
+      this.markers.push(marker);
+    });
   }
 
   buildMarker(point: Point): L.Marker<any> {
@@ -90,8 +110,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });//.locate({setView: true, maxZoom: 16});
 
     const mainLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      minZoom: 12,
-      maxZoom: 17
+      minZoom: 1,
+      maxZoom: 18
     });
 
     mainLayer.addTo(this.map);
