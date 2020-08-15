@@ -180,16 +180,19 @@ export class IssueListComponent implements OnInit {
             this.issues = issues;
             this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
 
-            if(this.issuesFilterForm.get("issueStates").value)
+            console.log(this.issuesFilterForm.get("issueStates").value);
+            console.log(this.issuesFilterForm.get("tags").value);
+
+            if(this.issuesFilterForm.get("issueStates").value.length > 0)
             {
               console.log(this.issues);
               this.issues = this.issues.filter(issue => [...this.issuesFilterForm.get("issueStates").value].includes(issue.state));
               console.log(this.issues);
             }
-            if(this.issuesFilterForm.get("tags").value)
+            if(this.issuesFilterForm.get("tags").value.length > 0)
             {
               console.log(this.issues);
-              this.issues = this.issues.filter(issue => issue.tags.filter(tag => [...this.issuesFilterForm.get("tags").value].includes(tag)));
+              this.issues = this.issues.filter(issue => issue.tags.some(tag => [...this.issuesFilterForm.get("tags").value].indexOf(tag) !== -1));
               console.log(this.issues);
             }
           }
