@@ -32,6 +32,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   });
 
   constructor(private geolocation: GeolocationService) {
+
+    this.markers = [];
+
     if(!this.center) {
       this.geolocation
       .getCurrentPosition()
@@ -63,11 +66,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     .then((position) => {
       this.position = position;
       this.createMap(this.position);
-      console.log(this.position);
+      console.log(this.map);
       this.mapPoints.forEach((point) => {
-        let marker = this.buildMarker(point)
+        let marker = this.buildMarker(point);
         marker.addTo(this.map);
         this.markers.push(marker);
+        console.log(this.markers);
       });
     })
     //this.createMap();
@@ -75,9 +79,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
 
-    for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
+    if(changes.mapPoints.previousValue)
     {
-      this.map.removeLayer(this.markers[i]);
+      for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
+      {
+        this.map.removeLayer(this.markers[i]);
+      }
     }
 
     this.markers = [];
@@ -89,6 +96,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       let marker = this.buildMarker(point)
       marker.addTo(this.map);
       this.markers.push(marker);
+      console.log(this.markers);
     });
   }
 
@@ -121,9 +129,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     if(this.clickable) {
       this.map.on("click", (e: L.LeafletMouseEvent) => {
+
+        for(let i = 0; i < this.markers.length; i++)
+        {
+          this.map.removeLayer(this.markers[i]);
+        }
+
+        this.markers = [];
+
         const marker = L.marker([e.latlng.lat, e.latlng.lng],
           { icon: this.smallIcon });
         marker.addTo(this.map).bindPopup('blabla');
+        this.markers.push(marker);
         this.location.emit([e.latlng.lng, e.latlng.lat]);
       });
     }
