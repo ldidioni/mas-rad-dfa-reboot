@@ -22,15 +22,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatIconModule} from '@angular/material/icon';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
 import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
 import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
 import { ImageModalComponent } from './issue/image-modal/image-modal.component';
+import { TextShortenPipe } from './shared/text-shorten.pipe';
 
 
 
@@ -45,7 +46,8 @@ import { ImageModalComponent } from './issue/image-modal/image-modal.component';
     IssueListComponent,
     IssueDetailComponent,
     IssueEditComponent,
-    ImageModalComponent
+    ImageModalComponent,
+    TextShortenPipe
   ],
   imports: [
     BrowserModule,
