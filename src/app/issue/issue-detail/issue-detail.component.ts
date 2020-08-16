@@ -27,7 +27,7 @@ export class IssueDetailComponent implements OnInit {
               private router: Router,
               private issueService: IssueService,
               private issueCommentService: IssueCommentService,
-              public matDialog: MatDialog) { 
+              public matDialog: MatDialog) {
     this.newCommentReq = new IssueCommentRequest();
   }
 
@@ -44,7 +44,8 @@ export class IssueDetailComponent implements OnInit {
         .subscribe({
             next: (issue: Issue) => {
               this.issue = issue;
-              this.issuePoint.push(new Point(issue.location.coordinates));
+              this.issuePoint = [new Point(issue.location.coordinates)];
+              //this.issuePoint.push(new Point(issue.location.coordinates));
               console.log(this.issue);
               console.log(this.issuePoint);
             },

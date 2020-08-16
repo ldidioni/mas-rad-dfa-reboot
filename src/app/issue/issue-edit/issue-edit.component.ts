@@ -82,13 +82,14 @@ export class IssueEditComponent implements OnInit {
         .subscribe({
             next: (issue: Issue) => {
               this.issue = issue;
-              this.issuePoint.push(new Point(this.issue.location.coordinates));
+              this.issuePoint = [new Point(issue.location.coordinates)];
+              //this.issuePoint.push(new Point(this.issue.location.coordinates));
               this.editIssueForm.get('issueType').setValue(this.issue.issueTypeHref);
               this.editIssueForm.get('description').setValue(this.issue.description);
 
               let control: FormControl = new FormControl(this.issue.imageUrl, Validators.required);
               this.editIssueForm.registerControl('imageUrls', new FormArray([control]));
-            
+
               //this.imageUrls.push(new FormControl(this.issue.imageUrl, Validators.required));
               //const imageUrls = this.editIssueForm.get('imageUrls') as FormArray;
               this.imageUrls.setControl(0, new FormControl(this.issue.imageUrl, Validators.required));

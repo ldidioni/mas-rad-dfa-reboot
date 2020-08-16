@@ -65,6 +65,8 @@ export class IssueListComponent implements OnInit {
               this.issues = issues;
               this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
 
+              console.log(this.issuePoints);
+
               // To populate issue type filter (search type)
               this.issueTypeObjects = issues.map((issue: Issue) => issue.issueType);
 

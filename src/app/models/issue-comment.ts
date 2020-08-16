@@ -4,4 +4,5 @@ export class IssueComment
     readonly authorHref: string;
     readonly createdAt: string;
     text: string;
+    author?: string;    // to support include statement
 }

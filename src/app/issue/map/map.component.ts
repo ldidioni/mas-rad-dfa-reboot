@@ -10,7 +10,7 @@ import { GeolocationService } from 'src/app/shared/services/geolocation.service'
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
 
-  @Input() mapPoints: Point[] = [];
+  @Input() mapPoints: Point[];
   @Input() center: Point;
   @Input() clickable: Boolean = true;
   @Output() location = new EventEmitter<[number, number]>();
@@ -32,6 +32,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   });
 
   constructor(private geolocation: GeolocationService) {
+
+    console.log(this.mapPoints);
 
     this.markers = [];
 
@@ -61,12 +63,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   } */
 
   ngAfterViewInit(): void {
+    console.log(this.mapPoints);
+
     this.geolocation
     .getCurrentPosition()
     .then((position) => {
       this.position = position;
       this.createMap(this.position);
       console.log(this.map);
+      console.log(this.mapPoints);
       this.mapPoints.forEach((point) => {
         let marker = this.buildMarker(point);
         marker.addTo(this.map);
@@ -79,6 +84,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
 
+    console.log(this.mapPoints);
+
     if(changes.mapPoints.previousValue)
     {
       for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
@@ -90,9 +97,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.markers = [];
 
     this.mapPoints = changes.mapPoints.currentValue;
+    console.log(changes.mapPoints.currentValue);
     //this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
-
+    let i = 1;
     this.mapPoints.forEach((point) => {
+      console.log(i++);
       let marker = this.buildMarker(point)
       marker.addTo(this.map);
       this.markers.push(marker);
