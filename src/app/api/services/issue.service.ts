@@ -48,6 +48,11 @@ export class IssueService
     return this.http.patch<Issue>(`${environment.apiUrl}/issues/${id}`, issueReq);
   }
 
+  deleteIssue(id: string): Observable<any>
+  {
+    return this.http.delete<any>(`${environment.apiUrl}/issues/${id}`);
+  }
+
   initializeIssue(): Issue
   {
     return new Issue();

@@ -17,7 +17,7 @@ export class IssueListComponent implements OnInit {
 
   issues: Issue[] = [];
   issuePoints: Point[] = [];
-  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt', 'details', 'editIssue'];
+  displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt', 'details', 'editIssue', 'deleteIssue'];
 
   issueTypes: string[];
   issueStates: string[];
@@ -214,8 +214,14 @@ export class IssueListComponent implements OnInit {
     this.router.navigateByUrl(`issue/{id}`);
   } */
 
-  onSaveComplete(): void {
-
+  deleteIssue(id: string)
+  {
+    this.issueService.deleteIssue(id).subscribe({
+      next: () => this.getAllIssues(),
+      error: (err) => {
+        console.warn(`Could not delete issue: ${err.message}`);
+      },
+    });
   }
 
 }
