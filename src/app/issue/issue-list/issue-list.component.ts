@@ -7,6 +7,15 @@ import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { LeafletMouseEvent } from 'leaflet';
 import * as L from 'leaflet';
 
+function compareNames(objectA: any, objectB: any) {
+  if (objectA.name < objectB.name){
+    return -1;
+  }
+  if (objectA.name > objectB.name){
+    return 1;
+  }
+  return 0;
+}
 
 @Component({
   selector: 'app-issue-list',
@@ -69,7 +78,9 @@ export class IssueListComponent implements OnInit {
 
               // To populate issue type filter (search type)
               this.issueTypeObjects = issues.map((issue: Issue) => issue.issueType);
+              this.issueTypeObjects = this.issueTypeObjects.sort(compareNames);
 
+              // Eliminate duplicate entries
               this.issueTypeObjects = Object.values(
                 this.issueTypeObjects.reduce( (c, e) => {
                   if (!c[e.name]) c[e.name] = e;
@@ -79,6 +90,7 @@ export class IssueListComponent implements OnInit {
 
               console.log(this.issueTypeObjects);
 
+              // Collect all issue type IDs to perform original query for issues without any filtering
               for(let issueTypeObject of this.issueTypeObjects)
               {
                 this.issueTypes.push(issueTypeObject.id);
@@ -89,6 +101,7 @@ export class IssueListComponent implements OnInit {
 
               // To populate creator filter (search type)
               this.issueCreatorObjects = issues.map((issue: Issue) => issue.creator);
+              this.issueCreatorObjects = this.issueCreatorObjects.sort(compareNames);
 
               this.issueCreatorObjects = Object.values(
                 this.issueCreatorObjects.reduce( (c, e) => {
@@ -109,7 +122,7 @@ export class IssueListComponent implements OnInit {
 
               // To populate issue state filter
               let states = issues.map((issue: Issue) => issue.state);
-              this.issueStates = [...new Set(states)];
+              this.issueStates = [...new Set(states.sort())];
 
               // To populate issue tags filter
               let tagArrays = issues.map((issue: Issue) => issue.tags);
@@ -122,7 +135,7 @@ export class IssueListComponent implements OnInit {
               }
               console.log(tags);
 
-              this.issueTags = [...new Set(tags)];
+              this.issueTags = [...new Set(tags.sort())];
               console.log(this.issueTags);
 
               this.queryObject["creator"]["$in"] = [...this.issueCreators];
