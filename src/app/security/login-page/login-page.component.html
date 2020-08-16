@@ -1,38 +1,40 @@
 <h2>Login</h2>
-<form #loginForm="ngForm" (submit)="onSubmit(loginForm)">
-    <mat-form-field>
-      <mat-label for="name">Name</mat-label>
-      <input matInput
-        type="text"
-        name="name"
-        id="name"
-        #nameField="ngModel"
-        required
-        [(ngModel)]="authRequest.name"
-      />
-      <p *ngIf="nameField.hasError('required') && nameField.touched">
-        Name is required
-      </p>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label for="password">Password</mat-label>
-      <input matInput
-        type="password"
-        name="password"
-        id="passwrod"
-        #passwordField="ngModel"
-        required
-        [(ngModel)]="authRequest.password"
-      />
-      <p *ngIf="passwordField.hasError('required') && passwordField.touched">
-        Password is required
-      </p>
-    </mat-form-field>
+<div class="row justify-content-center">
+  <form #loginForm="ngForm" (submit)="onSubmit(loginForm)" class="col-6">
+      <mat-form-field>
+        <mat-label for="name">Name</mat-label>
+        <input matInput
+          type="text"
+          name="name"
+          id="name"
+          #nameField="ngModel"
+          required
+          [(ngModel)]="authRequest.name"
+        />
+        <p *ngIf="nameField.hasError('required') && nameField.touched">
+          Name is required
+        </p>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="password">Password</mat-label>
+        <input matInput
+          type="password"
+          name="password"
+          id="passwrod"
+          #passwordField="ngModel"
+          required
+          [(ngModel)]="authRequest.password"
+        />
+        <p *ngIf="passwordField.hasError('required') && passwordField.touched">
+          Password is required
+        </p>
+      </mat-form-field>
 
-    <div>
-      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Log in</button>
-      <mat-error *ngIf="loginError">
-        Unable to log in. See the log for more information.
-      </mat-error>
-    </div>
-</form>
+      <div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Log in</button>
+        <mat-error *ngIf="loginError">
+          Unable to log in. See the log for more information.
+        </mat-error>
+      </div>
+  </form>
+</div>
