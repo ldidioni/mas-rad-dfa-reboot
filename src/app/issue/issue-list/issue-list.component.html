@@ -1,19 +1,8 @@
-<form novalidate
+<form class="row mt-2"
+      novalidate
       [formGroup]="issuesFilterForm">
 
-    <mat-form-field>
-        <mat-label for="types">Types</mat-label>
-        <mat-select
-            id="types"
-            [multiple]="true"
-            formControlName="issueTypes">
-            <mat-option *ngFor="let issueTypeObject of issueTypeObjects" [value]="issueTypeObject.id">
-                {{ issueTypeObject.name }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
+    <mat-form-field class="col">
       <mat-label for="creators">Creators</mat-label>
       <mat-select
           id="creators"
@@ -25,7 +14,19 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="col">
+      <mat-label for="types">Types</mat-label>
+      <mat-select
+          id="types"
+          [multiple]="true"
+          formControlName="issueTypes">
+          <mat-option *ngFor="let issueTypeObject of issueTypeObjects" [value]="issueTypeObject.id">
+              {{ issueTypeObject.name }}
+          </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="col">
       <mat-label for="states">States</mat-label>
       <mat-select
           id="states"
@@ -37,7 +38,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="col">
       <mat-label for="tags">Tags</mat-label>
       <mat-select
           id="tags"
@@ -53,57 +54,57 @@
 
 <!--<app-filter-form></app-filter-form>-->
 
-<table mat-table [dataSource]="issues" class="mat-elevation-z8">
+<table mat-table [dataSource]="issues" class="mat-elevation-z1 container-fluid">
 
   <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
   <!-- Creator Column -->
   <ng-container matColumnDef="creator">
-    <th mat-header-cell *matHeaderCellDef> Creator </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Creator </th>
     <td mat-cell *matCellDef="let element"> {{element.creator.name}} </td>
   </ng-container>
 
   <!-- Type Column -->
   <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef> Type </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Type </th>
     <td mat-cell *matCellDef="let element"> {{element.issueType.name}} </td>
   </ng-container>
 
   <!-- State Column -->
   <ng-container matColumnDef="state">
-    <th mat-header-cell *matHeaderCellDef> State </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> State </th>
     <td mat-cell *matCellDef="let element"> {{element.state}} </td>
   </ng-container>
 
   <!-- Description Column -->
   <ng-container matColumnDef="description">
-    <th mat-header-cell *matHeaderCellDef> Description </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Description </th>
     <td mat-cell *matCellDef="let element"> {{element.description | textShorten : 30}} </td>
   </ng-container>
 
   <!-- Assignee Column -->
   <ng-container matColumnDef="assignee">
-    <th mat-header-cell *matHeaderCellDef> Assignee </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Assignee </th>
     <td mat-cell *matCellDef="let element"> {{element.assignee ? element.assignee.name : ''}} </td>
   </ng-container>
 
   <!-- Created at Column -->
   <ng-container matColumnDef="createdAt">
-    <th mat-header-cell *matHeaderCellDef> Created at </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Created at </th>
     <td mat-cell *matCellDef="let element"> {{element.createdAt | date: 'mediumDate'}} </td>
   </ng-container>
 
   <!-- Updated at Column -->
   <ng-container matColumnDef="updatedAt">
-    <th mat-header-cell *matHeaderCellDef> Updated at </th>
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Updated at </th>
     <td mat-cell *matCellDef="let element"> {{element.updatedAt | date: 'mediumDate'}} </td>
   </ng-container>
 
   <!-- Details button Column -->
   <ng-container matColumnDef="details">
-    <th mat-header-cell *matHeaderCellDef> Go to issue details </th>
-    <td mat-cell *matCellDef="let element">
+    <th class="text-center" mat-header-cell *matHeaderCellDef> See details </th>
+    <td class="text-center" mat-cell *matCellDef="let element">
       <button
         mat-raised-button color="primary"
         type="button"
@@ -115,8 +116,8 @@
 
   <!-- Edit button Column -->
   <ng-container matColumnDef="editIssue">
-    <th mat-header-cell *matHeaderCellDef> Edit issue </th>
-    <td mat-cell *matCellDef="let element">
+    <th class="text-center" mat-header-cell *matHeaderCellDef> Edit </th>
+    <td class="text-center" mat-cell *matCellDef="let element">
       <button
         mat-raised-button color="primary"
         type="button"
@@ -128,8 +129,8 @@
 
     <!-- Delete button Column -->
     <ng-container matColumnDef="deleteIssue">
-      <th mat-header-cell *matHeaderCellDef> Delete issue </th>
-      <td mat-cell *matCellDef="let element">
+      <th class="text-center" mat-header-cell *matHeaderCellDef> Delete </th>
+      <td class="text-center" mat-cell *matCellDef="let element">
         <button
           mat-raised-button color="primary"
           type="button"
