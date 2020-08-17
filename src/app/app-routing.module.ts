@@ -14,10 +14,10 @@ const routes: Routes = [
   { path: "", redirectTo: "issues", pathMatch: "full" },
   { path: "login", component: LoginPageComponent },
   { path: "register", component: RegisterPageComponent },
-  { path: "issue/new", component: IssueNewComponent, canActivate: [AuthGuard], },
-  { path: 'issue/:id/edit', component: IssueEditComponent, canActivate: [AuthGuard], },
-  { path: 'issue/:id', component: IssueDetailComponent },
-  { path: "issues", component: IssueListComponent },
+  { path: "issue/new", component: IssueNewComponent, canActivate: [AuthGuard] },
+  { path: 'issue/:id/edit', component: IssueEditComponent, canActivate: [AuthGuard] },
+  { path: 'issue/:id', component: IssueDetailComponent, canActivate: [AuthGuard] },
+  { path: "issues", component: IssueListComponent, canActivate: [AuthGuard] },
   // Add the route to display the dummy page
   {
     path: "dummy",

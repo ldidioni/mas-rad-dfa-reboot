@@ -10,7 +10,7 @@
             <a *ngIf="!isAuthenticated" mat-button [routerLink]="['/login']">Log in</a>
             <app-logout-button *ngIf="isAuthenticated"></app-logout-button>
             <a *ngIf="isAuthenticated" mat-button [routerLink]="['/issue/new']">Report a new issue</a>
-            <a mat-button [routerLink]="['/issues']">See all issues</a>
+            <a *ngIf="isAuthenticated" mat-button [routerLink]="['/issues']">See all issues</a>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
