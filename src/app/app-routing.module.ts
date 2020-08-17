@@ -11,11 +11,11 @@ import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
 
 
 const routes: Routes = [
-  { path: "", redirectTo: "dummy", pathMatch: "full" },
+  { path: "", redirectTo: "issues", pathMatch: "full" },
   { path: "login", component: LoginPageComponent },
   { path: "register", component: RegisterPageComponent },
-  { path: "issue/new", component: IssueNewComponent },
-  { path: 'issue/:id/edit', component: IssueEditComponent },
+  { path: "issue/new", component: IssueNewComponent, canActivate: [AuthGuard], },
+  { path: 'issue/:id/edit', component: IssueEditComponent, canActivate: [AuthGuard], },
   { path: 'issue/:id', component: IssueDetailComponent },
   { path: "issues", component: IssueListComponent },
   // Add the route to display the dummy page
