@@ -106,7 +106,8 @@
     <th class="text-center" mat-header-cell *matHeaderCellDef> See details </th>
     <td class="text-center" mat-cell *matCellDef="let element">
       <button
-        mat-raised-button color="primary"
+        mat-raised-button
+        color="primary"
         type="button"
         [routerLink]="['/issue', element.id]">
         <mat-icon>place</mat-icon>
@@ -119,7 +120,8 @@
     <th class="text-center" mat-header-cell *matHeaderCellDef> Edit </th>
     <td class="text-center" mat-cell *matCellDef="let element">
       <button
-        mat-raised-button color="primary"
+        mat-raised-button
+        color="primary"
         type="button"
         [routerLink]="['/issue', element.id, 'edit']">
         <mat-icon>edit</mat-icon>
@@ -132,10 +134,11 @@
       <th class="text-center" mat-header-cell *matHeaderCellDef> Delete </th>
       <td class="text-center" mat-cell *matCellDef="let element">
         <button
-          mat-raised-button color="warn"
+          mat-raised-button
+          color="warn"
           type="button"
           (click)="deleteIssue(element.id)">
-          <mat-icon>delete</mat-icon>
+          <mat-icon>delete_forever</mat-icon>
         </button>
       </td>
     </ng-container>
