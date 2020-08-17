@@ -6,6 +6,7 @@ import { IssueType } from 'src/app/models/issue-type';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { LeafletMouseEvent } from 'leaflet';
 import * as L from 'leaflet';
+import { AuthService } from 'src/app/security/auth.service';
 
 function compareNames(objectA: any, objectB: any) {
   if (objectA.name < objectB.name){
@@ -39,8 +40,10 @@ export class IssueListComponent implements OnInit {
 
   issuesFilterForm: FormGroup;
 
+  isAuthenticated: boolean;
 
   constructor(private issueService: IssueService,
+              //private auth: AuthService,
               private formBuilder: FormBuilder,
               private router: Router)
   {
@@ -49,6 +52,14 @@ export class IssueListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+/*     this.auth.isAuthenticated().subscribe({
+      next: (isAuthenticated) => this.isAuthenticated = isAuthenticated,
+      error: (err) => {
+        console.warn(`Could not submit comment: ${err.message}`);
+      },
+    }); */
+
     this.getAllIssues();
     //this.issuePoints = [];
 

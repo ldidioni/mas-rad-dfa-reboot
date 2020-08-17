@@ -6,9 +6,10 @@
         <h1>Citizen Engagement</h1>
         <span class="menu-spacer"></span>
         <div>
-            <a mat-button [routerLink]="['/register']">Register</a>
-            <a mat-button [routerLink]="['/login']">Log in</a>
-            <a mat-button [routerLink]="['/issue/new']">Report a new issue</a>
+            <a *ngIf="!isAuthenticated" mat-button [routerLink]="['/register']">Register</a>
+            <a *ngIf="!isAuthenticated" mat-button [routerLink]="['/login']">Log in</a>
+            <app-logout-button *ngIf="isAuthenticated"></app-logout-button>
+            <a *ngIf="isAuthenticated" mat-button [routerLink]="['/issue/new']">Report a new issue</a>
             <a mat-button [routerLink]="['/issues']">See all issues</a>
         </div>
     </mat-toolbar-row>

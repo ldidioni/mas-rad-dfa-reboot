@@ -41,7 +41,7 @@ export class LoginPageComponent {
 
       // Perform the authentication request to the API.
       this.auth.login(this.authRequest).subscribe({
-        next: () => this.router.navigateByUrl("/"),
+        next: () => this.router.navigateByUrl("/issues"),
         error: (err) => {
           this.loginError = true;
           console.warn(`Authentication failed: ${err.message}`);
