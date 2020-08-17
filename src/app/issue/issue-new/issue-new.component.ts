@@ -7,9 +7,10 @@ import { IssueTypeService } from 'src/app/api/services/issue-type.service';
 import { IssueType } from 'src/app/models/issue-type';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { Router } from '@angular/router';
 
 
-function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null 
+function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null
 {
   const hasExpectedLength = (tag: string) => 2 <= tag.length && tag.length <= 25;
 
@@ -26,7 +27,7 @@ function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null
   templateUrl: './issue-new.component.html',
   styleUrls: ['./issue-new.component.scss']
 })
-export class IssueNewComponent implements OnInit 
+export class IssueNewComponent implements OnInit
 {
   newIssueForm: FormGroup;
   issueNewRequest: IssueNewRequest;
@@ -44,15 +45,16 @@ export class IssueNewComponent implements OnInit
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(private formBuilder: FormBuilder,
+              private router: Router,
               private issueTypeService: IssueTypeService,
-              private issueService: IssueService) 
+              private issueService: IssueService)
   {
     this.tags = [];
     this.issueNewRequest = new IssueNewRequest();
     this.mapClicked = false;
   }
 
-  ngOnInit(): void 
+  ngOnInit(): void
   {
     this.getAllIssueTypes();
     this.newIssueForm = this.formBuilder.group({
@@ -68,7 +70,7 @@ export class IssueNewComponent implements OnInit
     this.newIssueForm.controls['tags'].setValue(this.tags);
   }
 
-  buildImageUrl(): FormControl 
+  buildImageUrl(): FormControl
   {
     //return this.formBuilder.control({
     //  imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
@@ -77,7 +79,7 @@ export class IssueNewComponent implements OnInit
     '', [Validators.required, Validators.maxLength(500), Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$')]);
   }
 
-  get imageUrl(): FormControl 
+  get imageUrl(): FormControl
   {
     if(this.newIssueForm) {
       return <FormControl>this.newIssueForm.get('imageUrl');
@@ -85,7 +87,7 @@ export class IssueNewComponent implements OnInit
     return null;
   }
 
-  get imageUrls(): FormArray 
+  get imageUrls(): FormArray
   {
     if(this.newIssueForm) {
       return <FormArray>this.newIssueForm.get('imageUrls');
@@ -93,12 +95,12 @@ export class IssueNewComponent implements OnInit
     return null;
   }
 
-  addImageUrl(): void 
+  addImageUrl(): void
   {
     this.imageUrls.push(this.buildImageUrl());
   }
 
-  getAllIssueTypes(): void 
+  getAllIssueTypes(): void
   {
     this.issueTypeService.loadAllIssueTypes()
         .subscribe({
@@ -137,7 +139,7 @@ export class IssueNewComponent implements OnInit
     }
   } */
 
-  addTag(event: MatChipInputEvent) 
+  addTag(event: MatChipInputEvent)
   {
     const input = event.input;
     const value = event.value;
@@ -169,7 +171,7 @@ export class IssueNewComponent implements OnInit
     }
   } */
 
-  removeTag(tag: string): void 
+  removeTag(tag: string): void
   {
     //let controller = this.newIssueForm.controls['tags'];
     const index = this.tags.indexOf(tag);
@@ -181,12 +183,12 @@ export class IssueNewComponent implements OnInit
     }
   }
 
-  removeImageUrl(index: number): void 
+  removeImageUrl(index: number): void
   {
     this.imageUrls.removeAt(index);
   }
 
-  reportIssue(): void 
+  reportIssue(): void
   {
     if (this.newIssueForm.valid) {
       if (this.newIssueForm.dirty) {
@@ -214,14 +216,14 @@ export class IssueNewComponent implements OnInit
     }
   }
 
-  onCreationComplete(): void 
+  onCreationComplete(): void
   {
     // Reset the form to clear the flags
     this.newIssueForm.reset();
-    //this.router.navigate(['/issues']);
+    this.router.navigateByUrl("/issues");
   }
 
-  onLocationSet($event): void 
+  onLocationSet($event): void
   {
     console.log($event);
     this.mapClicked = true;

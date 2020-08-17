@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TextShortenPipe implements PipeTransform {
 
-  transform(value: string, ...args: unknown[]): unknown {
+  transform(value: string, ...args: unknown[]): string {
     let maxLength = args.length > 0 ? parseInt(<string>args[0], 10) : 200;
     let trail = args.length > 1 ? args[1] : '...';
 

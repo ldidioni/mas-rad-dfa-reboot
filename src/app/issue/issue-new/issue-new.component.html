@@ -87,7 +87,7 @@
             id="typeId"
             formControlName="issueType">
             <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.href">
-                {{ issueType.name }}
+                {{ issueType.name | hyphenToSpace }}
             </mat-option>
         </mat-select>
         <mat-error *ngIf="newIssueForm.get('issueType').touched || newIssueForm.get('issueType').dirty">

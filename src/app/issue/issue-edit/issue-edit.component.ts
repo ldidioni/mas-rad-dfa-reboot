@@ -7,7 +7,7 @@ import { IssueTypeService } from 'src/app/api/services/issue-type.service';
 import { IssueType } from 'src/app/models/issue-type';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null {
 
@@ -46,6 +46,7 @@ export class IssueEditComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
+              private router: Router,
               private issueTypeService: IssueTypeService,
               private issueService: IssueService) {
     this.tags = [];
@@ -251,7 +252,7 @@ export class IssueEditComponent implements OnInit {
   onCreationComplete(): void {
     // Reset the form to clear the flags
     this.editIssueForm.reset();
-    //this.router.navigate(['/issues']);
+    this.router.navigateByUrl("/issues");
   }
 
   onLocationSet($event): void {

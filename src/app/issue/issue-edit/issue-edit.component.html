@@ -2,8 +2,10 @@
 <h2>Update issue with id #{{ id }}</h2>
 <form novalidate
       (ngSubmit)="reportIssue()"
-      [formGroup]="editIssueForm">
-    <mat-form-field class="row">
+      [formGroup]="editIssueForm"
+      class="container-fluid">
+
+    <mat-form-field class="col-6">
         <mat-label for="descriptionId">Description</mat-label>
         <input matInput
             id="descriptionId"
@@ -36,8 +38,8 @@
 -->
     <div formArrayName="imageUrls">
         <div *ngFor="let imageUrl of imageUrls?.controls; let i=index">
-            <div class="row">
-                <mat-form-field class="col-10">
+            <div>
+                <mat-form-field class="col-6">
                     <mat-label attr.for="{{ 'ImageUrl' + i }}">Image URL</mat-label>
                     <input matInput
                         id="{{ 'ImageUrl' + i }}"
@@ -52,6 +54,7 @@
                 <button *ngIf="i > 0"
                     mat-raised-button
                     type="button"
+                    color="basic"
                     (click)="removeImageUrl(i)">
                     <mat-icon>delete_forever</mat-icon>
                 </button>
@@ -68,22 +71,23 @@
                 </span>
             </mat-error>
         </div>
+        <div class="d-block col-6 mb-3">
+            <button mat-raised-button
+                type="button"
+                [disabled]="!imageUrls?.valid"
+                (click)="addImageUrl()">
+                Add image
+            </button>
+        </div>
     </div>
-    <div class="row">
-        <button mat-raised-button
-            type="button"
-            [disabled]="!imageUrls?.valid"
-            (click)="addImageUrl()">
-            Add image
-        </button>
-    </div>
-    <mat-form-field class="row">
+
+    <mat-form-field class="col-6">
         <mat-label for="typeId">Type</mat-label>
         <mat-select
             id="typeId"
             formControlName="issueType">
             <mat-option *ngFor="let issueType of issueTypes" [value]="issueType.href">
-                {{ issueType.name }}
+                {{ issueType.name | hyphenToSpace }}
             </mat-option>
         </mat-select>
         <mat-error *ngIf="editIssueForm.get('issueType').touched || editIssueForm.get('issueType').dirty">
@@ -93,7 +97,7 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="row">
+    <mat-form-field class="d-block col-6">
         <mat-chip-list #chipList formControlName="tags">
             <mat-label for="tagsId">Tags</mat-label>
             <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
@@ -136,7 +140,8 @@
         mat-raised-button color="primary"
         type="submit"
         [title]="editIssueForm.valid ? 'Submit' : 'Please complete the form'"
-        [disabled]="!editIssueForm.valid">
+        [disabled]="!editIssueForm.valid"
+        class="d-block mt-2">
         Update issue
     </button>
 
