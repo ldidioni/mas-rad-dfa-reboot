@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { RegistrationRequest } from 'src/app/models/registration-request';
 import { debounceTime, map } from 'rxjs/operators';
 import { UserService } from 'src/app/api/services/user.service';
+import { Router } from '@angular/router';
 
 
 function confirmPassword(c: AbstractControl): {[key: string]: boolean} | null {
@@ -31,6 +32,7 @@ export class RegisterPageComponent implements OnInit {
   errorMessage: string;
 
   constructor(private formBuilder: FormBuilder,
+              private router: Router,
               private userService: UserService) {
 
     this.registration = new RegistrationRequest();
@@ -38,7 +40,7 @@ export class RegisterPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      name:       ['', [Validators.required, Validators.maxLength(25), Validators.pattern('[a-zA-Z0-9]*')], this.validateNameNotTaken.bind(this)],
+      name:       ['', [Validators.required, Validators.maxLength(25), Validators.pattern('[a-zA-Z0-9]*')], /*this.validateNameNotTaken.bind(this)*/],
       passwordGroup: this.formBuilder.group({
         password:       ['', [Validators.required, Validators.minLength(4)]],
         passwordRepeat: ['', [Validators.required]]
@@ -88,6 +90,6 @@ export class RegisterPageComponent implements OnInit {
   onRegistrationComplete(): void {
     // Reset the form to clear the flags
     this.registerForm.reset();
-    //this.router.navigate(['/issues']);
+    this.router.navigateByUrl("/issues")
   }
 }

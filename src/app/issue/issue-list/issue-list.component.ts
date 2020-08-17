@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { LeafletMouseEvent } from 'leaflet';
 import * as L from 'leaflet';
 import { AuthService } from 'src/app/security/auth.service';
+import { User } from 'src/app/models/user';
 
 function compareNames(objectA: any, objectB: any) {
   if (objectA.name < objectB.name){
@@ -36,14 +37,14 @@ export class IssueListComponent implements OnInit {
   issueCreatorObjects: any;
   issueCreators: any;
 
+  currentUser: User;
+
   queryObject: any;
 
   issuesFilterForm: FormGroup;
 
-  isAuthenticated: boolean;
-
   constructor(private issueService: IssueService,
-              //private auth: AuthService,
+              private auth: AuthService,
               private formBuilder: FormBuilder,
               private router: Router)
   {
@@ -53,12 +54,12 @@ export class IssueListComponent implements OnInit {
 
   ngOnInit(): void {
 
-/*     this.auth.isAuthenticated().subscribe({
-      next: (isAuthenticated) => this.isAuthenticated = isAuthenticated,
+    this.auth.getUser().subscribe({
+      next: (user) => this.currentUser = user,
       error: (err) => {
-        console.warn(`Could not submit comment: ${err.message}`);
+        console.warn(`Could not determine current user: ${err.message}`);
       },
-    }); */
+    });
 
     this.getAllIssues();
     //this.issuePoints = [];
@@ -246,6 +247,28 @@ export class IssueListComponent implements OnInit {
         console.warn(`Could not delete issue: ${err.message}`);
       },
     });
+  }
+
+  isStaff(): boolean
+  {
+/*     this.auth.isStaff().subscribe({
+      next: (isStaff) => isStaff,
+      error: (err) => {
+        console.warn(`Could not determine if current user has staff permissions: ${err.message}`);
+      },
+    }); */
+    return this.currentUser.roles.includes('staff');
+  }
+
+  isAuthor(creator: User): boolean
+  {
+    return this.currentUser.id === creator.id;
+/*     this.auth.getUser().subscribe({
+      next: (user) => {console.log(user); return user.id === creator.id},
+      error: (err) => {
+        console.warn(`Could not determine if current user is creator of issue: ${err.message}`);
+      },
+    }); */
   }
 
 }

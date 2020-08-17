@@ -123,6 +123,7 @@
         mat-raised-button
         color="primary"
         type="button"
+        [disabled]="!(isStaff() || isAuthor(element.creator))"
         [routerLink]="['/issue', element.id, 'edit']">
         <mat-icon>edit</mat-icon>
       </button>
@@ -137,6 +138,7 @@
           mat-raised-button
           color="warn"
           type="button"
+          [disabled]="!(isStaff() || isAuthor(element.creator))"
           (click)="deleteIssue(element.id)">
           <mat-icon>delete_forever</mat-icon>
         </button>
