@@ -1,4 +1,5 @@
 import { IssueType } from './issue-type';
+import { User } from './user';
 
 export class Issue
 {
@@ -16,7 +17,7 @@ export class Issue
     additionalImageUrls?: string[];
     tags?: string[];
     issueType?: IssueType;  // support for include statements
-    creator?: IssueType;    // support for include statements
+    creator?: User;    // support for include statements
 }
 
 export class Point

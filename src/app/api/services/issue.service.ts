@@ -31,6 +31,11 @@ export class IssueService
     return this.http.post<Issue[]>(`${environment.apiUrl}/issues/searches?sort=-updatedAt&include=creator&include=issueType&include=assignee`, queryObject, { headers: headers });
   }
 
+  loadIssueWithDetails(id: string): Observable<Issue>
+  {
+    return this.http.get<Issue>(`${environment.apiUrl}/issues/${id}?include=creator&include=issueType&include=assignee`);
+  }
+
   loadIssue(id: string): Observable<Issue>
   {
     return this.http.get<Issue>(`${environment.apiUrl}/issues/${id}`);

@@ -79,7 +79,7 @@ export class IssueEditComponent implements OnInit {
   }
 
   getIssue(id: string): void {
-    this.issueService.loadIssue(id)
+    this.issueService.loadIssueWithDetails(id)
         .subscribe({
             next: (issue: Issue) => {
               this.issue = issue;
