@@ -14,7 +14,7 @@ function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null
 {
   const hasExpectedLength = (tag: string) => 2 <= tag.length && tag.length <= 25;
 
-  if(c.value.every(hasExpectedLength))
+  if(c.value != null && c.value.every(hasExpectedLength))
   {
     return (null);
   }

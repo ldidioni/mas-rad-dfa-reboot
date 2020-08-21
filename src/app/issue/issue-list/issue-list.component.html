@@ -1,5 +1,27 @@
 <form class="row mt-2"
       novalidate
+      (ngSubmit)="search()"
+      [formGroup]="issuesSearchForm">
+
+    <mat-form-field class="col-6">
+        <mat-label for="queryId">Free search</mat-label>
+        <input matInput
+            id="queryId"
+            type="text"
+            placeholder="Search issues' description..."
+            formControlName="query" />
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="basic"
+      type="submit"
+      class="d-block mt-2">
+      <mat-icon>search</mat-icon>
+  </button>
+</form>
+
+<form class="row mt-2"
+      novalidate
       [formGroup]="issuesFilterForm">
 
     <mat-form-field class="col">

@@ -42,6 +42,9 @@ export class IssueListComponent implements OnInit {
   queryObject: any;
 
   issuesFilterForm: FormGroup;
+  issuesSearchForm: FormGroup;
+
+  searchString = "";
 
   constructor(private issueService: IssueService,
               private auth: AuthService,
@@ -70,6 +73,10 @@ export class IssueListComponent implements OnInit {
       issueStates: '',
       tags:        '',
       location:    ''
+    });
+
+    this.issuesSearchForm = this.formBuilder.group({
+      query:  ''
     });
 
     this.queryObject = {issueType: {"$in": [ ]},
@@ -200,7 +207,28 @@ export class IssueListComponent implements OnInit {
     });
   }
 
-  searchIssues(queryObject: any) {
+  search()
+  {
+    this.searchString = this.issuesSearchForm.get('query').value;
+
+    this.issueService.searchIssues(this.queryObject)
+      .subscribe({
+          next: (issues: Issue[]) => {
+            this.issues = issues;
+            this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
+
+            if(this.searchString.length > 0)
+            {
+              console.log(this.issues);
+              this.issues = this.issues.filter(issue => issue.description.includes(this.searchString));
+              console.log(this.issues);
+            }
+          }
+      });
+  }
+
+  searchIssues(queryObject: any)
+  {
     this.issueService.searchIssues(queryObject)
       .subscribe({
           next: (issues: Issue[]) => {
