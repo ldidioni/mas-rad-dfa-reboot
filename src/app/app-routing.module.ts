@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: "login", component: LoginPageComponent },
   { path: "register", component: RegisterPageComponent },
   { path: "issue/new", component: IssueNewComponent, canActivate: [AuthGuard] },
-  { path: 'issue/:id/edit', component: IssueEditComponent, canActivate: [AuthGuard]}, //, PermissionGuard] },
+  { path: 'issue/:id/edit', component: IssueEditComponent, canActivate: [AuthGuard, PermissionGuard] },
   { path: 'issue/:id', component: IssueDetailComponent, canActivate: [AuthGuard] },
   { path: "issues", component: IssueListComponent, canActivate: [AuthGuard] },
   // Add the route to display the dummy page
@@ -29,7 +29,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {enableTracing: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { map } from "rxjs/operators";
 import { AuthService } from "../auth.service";
 import { User } from 'src/app/models/user';
@@ -27,12 +27,13 @@ export class PermissionGuard implements CanActivate {
 
         let currentUser: Observable<User> = this.auth.getUser();
 
-        let joinedObservables = forkJoin([isStaff, issueCreator, currentUser]);
-
-        return (
-            joinedObservables
-                // If the current user has staff permissions or is the creator of the issue, return true, otherwise, returns an UrlTree to redirect to the login page
-                .pipe(map(([isStaff, creator, currentUser]) => ((isStaff || creator === currentUser) ? true : this.router.parseUrl("/login"))))
+        return combineLatest(isStaff, issueCreator, currentUser)
+                .pipe(map(([isStaff, creator, currentUser]) => {
+                    console.log(isStaff);
+                    console.log(creator.id);
+                    console.log(currentUser.id);
+                    return (isStaff || creator.id === currentUser.id) ? true : this.router.parseUrl("/issues");
+                })
         );
     }
 }
