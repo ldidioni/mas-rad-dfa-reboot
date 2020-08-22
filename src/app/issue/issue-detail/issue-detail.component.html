@@ -1,60 +1,55 @@
-<p>issue-detail works!</p>
-
-
-location: Point;
-
 <div class="card">
     <div class="card-header"
         *ngIf="issue">
         {{'Issue #' + issue.id }}
     </div>
-  
+
     <div class="card-body"
         *ngIf="issue">
-  
+
         <div class="row">
-  
-            <div class="col-md-8">
+
+            <div class="col-12">
                 <div class="row">
-                    <div class="col-md-3">Description:</div>
-                    <div class="col-md-6">{{issue.description}}</div>
+                    <div class="col-2">Description:</div>
+                    <div class="col-10">{{issue.description}}</div>
+                </div>
+                <div *ngIf="issue.issueType" class="row">
+                    <div class="col-2">Type:</div>
+                    <div class="col-10">{{issue.issueType.name | hyphenToSpace}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">Type:</div>
-                    <div class="col-md-6">{{issue.issueTypeHref}}</div>
+                    <div class="col-2">State:</div>
+                    <div class="col-10">{{issue.state}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">State:</div>
-                    <div class="col-md-6">{{issue.state}}</div>
+                    <div class="col-2">Creation:</div>
+                    <div class="col-10">{{issue.createdAt | date: 'mediumDate'}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">Creation:</div>
-                    <div class="col-md-6">{{issue.createdAt}}</div>
+                    <div class="col-2">Updated:</div>
+                    <div class="col-10">{{issue.updatedAt | date: 'mediumDate'}}</div>
+                </div>
+                <div *ngIf="issue.creator" class="row">
+                    <div class="col-2">Creator:</div>
+                    <div class="col-10">{{issue.creator.name}}</div>
+                </div>
+                <div *ngIf="issue.assignee" class="row">
+                    <div class="col-2">Assignee:</div>
+                    <div class="col-10">{{issue.assignee.name}}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">Updated:</div>
-                    <div class="col-md-6">{{issue.updatedAt}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">Creator:</div>
-                    <div class="col-md-6">{{issue.creatorHref}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">Assignee:</div>
-                    <div class="col-md-6">{{issue.assigneeHref}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">Tags:</div>
-                    <div class="col-md-6">{{issue.tags}}</div>
+                    <div class="col-2">Tags:</div>
+                    <div class="col-10">{{issue.tags}}</div>
                 </div>
             </div>
             <div class="container">
               <div class="row">
                 <div class="col">
-                  <mat-card class="col-md-4"
+                  <mat-card class="col-4"
                       *ngIf="issue.imageUrl">
-                    <a 
-                      style="cursor: pointer" 
+                    <a
+                      style="cursor: pointer"
                       (click)="openModal(issue.imageUrl)">
                       <img class="center-block img-responsive"
                         [style.height.px]="150"
@@ -63,10 +58,10 @@ location: Point;
                     </a>
                   </mat-card>
 
-                  <mat-card class="col-md-4"
+                  <mat-card class="col-4"
                       *ngFor="let imageUrl of issue.additionalImageUrls">
-                    <a 
-                      style="cursor: pointer" 
+                    <a
+                      style="cursor: pointer"
                       (click)="openModal(imageUrl)">
                       <img class="center-block img-responsive"
                         [style.height.px]="150"
@@ -80,9 +75,9 @@ location: Point;
       </div>
 
       <app-map [mapPoints]="issuePoint" [clickable]="false"></app-map>
-  
+
       <div class="row mt-4">
-        <div class="col-md-4">
+        <div class="col-4">
           <button class="btn btn-outline-secondary mr-3"
                   style="width:80px">
             <i class="fa fa-chevron-left"></i> Back
@@ -95,7 +90,7 @@ location: Point;
         </div>
       </div>
     </div>
- 
+
   </div>
   <div *ngFor="let comment of comments">
     <div>{{ comment.author.name }}</div>

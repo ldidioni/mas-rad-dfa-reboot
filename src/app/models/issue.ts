@@ -17,7 +17,8 @@ export class Issue
     additionalImageUrls?: string[];
     tags?: string[];
     issueType?: IssueType;  // support for include statements
-    creator?: User;    // support for include statements
+    creator?: User;         // support for include statements
+    assignee?: User;        // support for include statements
 }
 
 export class Point
