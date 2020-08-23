@@ -4,7 +4,7 @@ export class IssueComment
     readonly authorHref: string;
     readonly createdAt: string;
     text: string;
-    author?: Author;    // to support include statement
+    author?: Author;    // to support respective "include" query parameter
 }
 
 class Author

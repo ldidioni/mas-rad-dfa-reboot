@@ -1,5 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe which converts hyphenated strings into their equivalent using whitespaces
+ * e.g. dangerous-road => dangerous road
+ */
 @Pipe({
   name: 'hyphenToSpace'
 })

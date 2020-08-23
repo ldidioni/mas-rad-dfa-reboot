@@ -6,7 +6,10 @@ import { AuthService } from "../auth.service";
 import { User } from 'src/app/models/user';
 import { IssueService } from 'src/app/api/services/issue.service';
 
-
+/**
+ * Guard which only grants access to a issue-specific route provided the current user has either staff permission
+ * or is the author of the issue. The issue is identified by the means of its id which is a route parameter
+ */
 @Injectable({
     providedIn: 'root'
 })
@@ -27,11 +30,8 @@ export class PermissionGuard implements CanActivate {
 
         let currentUser: Observable<User> = this.auth.getUser();
 
-        return combineLatest(isStaff, issueCreator, currentUser)
+        return combineLatest(isStaff, issueCreator, currentUser)    // emit the last emitted value from each observable, which do not need to complete (contrary to forJoin)
                 .pipe(map(([isStaff, creator, currentUser]) => {
-                    console.log(isStaff);
-                    console.log(creator.id);
-                    console.log(currentUser.id);
                     return (isStaff || creator.id === currentUser.id) ? true : this.router.parseUrl("/issues");
                 })
         );

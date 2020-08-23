@@ -1,5 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe which converts camelCase strings into their hyphenated equivalent
+ * e.g. inProgress => in-progress
+ */
 @Pipe({
   name: 'camelcaseToHyphen'
 })

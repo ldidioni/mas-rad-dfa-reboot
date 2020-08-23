@@ -16,9 +16,9 @@ export class Issue
     imageUrl?: string;
     additionalImageUrls?: string[];
     tags?: string[];
-    issueType?: IssueType;  // support for include statements
-    creator?: User;         // support for include statements
-    assignee?: User;        // support for include statements
+    issueType?: IssueType;  // to support respective "include" query parameter
+    creator?: User;         // to support respective "include" query parameter
+    assignee?: User;        // to support respective "include" query parameter
 }
 
 export class Point
