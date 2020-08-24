@@ -1,5 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe which truncates strings to the defined maximum length (default = 200 characters)
+ * e.g. it is a rainy day => it is a...
+ */
 @Pipe({
   name: 'textShorten'
 })

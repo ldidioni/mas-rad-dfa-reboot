@@ -24,6 +24,9 @@ function confirmPassword(c: AbstractControl): {[key: string]: boolean} | null {
   return {'nomatch': true};
 }
 
+/**
+ * New users registration page
+ */
 @Component({
   selector: 'app-register-page',
   templateUrl: './register-page.component.html',
@@ -45,9 +48,8 @@ export class RegisterPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /**
-     * We initialize the registration form
-     */
+
+    // We initialize the registration form
     this.registerForm = this.formBuilder.group({
       name:       ['', [Validators.required, Validators.maxLength(25), Validators.pattern('[a-zA-Z0-9]*')], /*this.validateNameNotTaken.bind(this)*/],
       passwordGroup: this.formBuilder.group({
@@ -76,15 +78,16 @@ export class RegisterPageComponent implements OnInit {
   registerUser(): void {
     if (this.registerForm.valid) {
       if (this.registerForm.dirty) {
-        //const reg = { ...this.registration, ...this.registerForm.value };
 
+        // We build the registration object to be sent to the API
         this.registration.name = this.registerForm.get('name').value.toLowerCase();
         this.registration.password = this.registerForm.get('passwordGroup.password').value;
         this.registration.firstname = this.registerForm.get('firstname').value;
         this.registration.lastname = this.registerForm.get('lastname').value;
         this.registration.phone = this.registerForm.get('phone').value;
-        //this.registration.roles = ['citizen'];
+        //this.registration.roles = ['citizen']; // Alternative to hard-coding "roles = ['citizen']" in User constructor
 
+        // We send the registration object to the back-end
         this.userService.createUser(this.registration)
           .subscribe({
             next: () => this.onRegistrationComplete(),
@@ -98,6 +101,9 @@ export class RegisterPageComponent implements OnInit {
     }
   }
 
+  /**
+   * Method called upon sending the registration object to the back-end
+   */
   onRegistrationComplete(): void {
     this.registerForm.reset();            // Reset the form to clear the flags
     this.router.navigateByUrl("/issues")

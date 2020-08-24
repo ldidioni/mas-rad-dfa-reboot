@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { IssueService } from 'src/app/api/services/issue.service';
-import { Issue, Point, state } from 'src/app/models/issue';
+import { Issue, Point } from 'src/app/models/issue';
 import { Router } from '@angular/router';
-import { IssueType } from 'src/app/models/issue-type';
-import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
-import { LeafletMouseEvent } from 'leaflet';
-import * as L from 'leaflet';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/models/user';
 
+/**
+ * Function that sorts strings (used for options in select)
+ */
 function compareNames(objectA: any, objectB: any) {
   if (objectA.name < objectB.name){
     return -1;
@@ -19,6 +19,9 @@ function compareNames(objectA: any, objectB: any) {
   return 0;
 }
 
+/**
+ * Issue list page
+ */
 @Component({
   selector: 'app-issue-list',
   templateUrl: './issue-list.component.html',

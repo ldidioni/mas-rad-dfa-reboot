@@ -9,16 +9,24 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
 
+/**
+ * Custom form validator which checks for every tags in the value array to have acceptable lengths
+ */
 function checkTagLength(c: AbstractControl): {[key: string]: boolean} | null {
 
   const hasExpectedLength = (tag: string) => 2 <= tag.length && tag.length <= 25;
 
-  if(c.value.every(hasExpectedLength)){
+  // every tags have acceptable lengths
+  if(c.value != null && c.value.every(hasExpectedLength)){
     return (null);
   }
+  // at least one tag does not have an acceptable length
   return {'tagLength': true};
 }
 
+/**
+ * Issue edition page
+ */
 @Component({
   selector: 'app-issue-edit',
   templateUrl: './issue-edit.component.html',
@@ -30,7 +38,7 @@ export class IssueEditComponent implements OnInit {
   issue: Issue = new Issue();
   issuePoint: Point[] = [];
   editIssueForm: FormGroup;
-  issueNewRequest: IssueNewRequest;
+  issueNewRequest: IssueNewRequest; // the issue request object aimed at being sent to the API
   issueTypes: IssueType[];
 
   errorMessage: string;
@@ -42,32 +50,37 @@ export class IssueEditComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA]; // keys that delimit the different tags in the mat-chip element
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               private router: Router,
               private issueTypeService: IssueTypeService,
-              private issueService: IssueService) {
+              private issueService: IssueService)
+  {
     this.tags = [];
+    // We initialize the issue request object aimed at being sent to the API
     this.issueNewRequest = new IssueNewRequest();
     this.mapClicked = false;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
+    // we get the list of issue types to populate the options list of the respective select
     this.getAllIssueTypes();
+
+    // We initialize the issue edition form
     this.editIssueForm = this.formBuilder.group({
       description:  ['', [Validators.required, Validators.maxLength(1000)]],
       issueType:    ['', [Validators.required]],
-      //imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
       imageUrls:    this.formBuilder.array([this.buildImageUrl()]),
       tags:         [this.tags, [Validators.required, checkTagLength]],
       location:     ['', [Validators.required]]
-      //roles:      [{value: ['citizen'], disabled: true}]
     });
 
     //this.editIssueForm.controls['tags'].setValue(this.tags);
 
+    // We get the issue id from the respective route parameter, then we query the corresponding issue from the back-end to fill the form in
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.getIssue(this.id);
@@ -78,6 +91,9 @@ export class IssueEditComponent implements OnInit {
     }); */
   }
 
+  /**
+   * Method which gets the issue identified through its id and fill the form in with the issue's attributes values
+   */
   getIssue(id: string): void {
     this.issueService.loadIssueWithDetails(id)
         .subscribe({
@@ -112,32 +128,34 @@ export class IssueEditComponent implements OnInit {
         });
   }
 
-  buildImageUrl(): FormControl {
-    //return this.formBuilder.control({
-    //  imageUrl:     ['', [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]]
-  //});
-  return new FormControl(
-    '', [Validators.required, Validators.maxLength(500), Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$')]);
+  /**
+   * Generate a new form control to input an image URL.
+   * Called at time of initializing the newIssueForm and upon clicking the "Add image" button
+   */
+  buildImageUrl(): FormControl
+  {
+    return new FormControl(
+      '', [Validators.required, Validators.maxLength(500), Validators.pattern('^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$')]);
   }
 
-  get imageUrl(): FormControl {
-    if(this.editIssueForm) {
-      return <FormControl>this.editIssueForm.get('imageUrl');
-    }
-    return null;
-  }
-
-  get imageUrls(): FormArray {
+  get imageUrls(): FormArray
+  {
     if(this.editIssueForm) {
       return <FormArray>this.editIssueForm.get('imageUrls');
     }
     return null;
   }
 
+  /**
+   * Method called upon clicking the "Add image" button
+   */
   addImageUrl(): void {
     this.imageUrls.push(this.buildImageUrl());
   }
 
+  /**
+   * Method which gets the list of all existing issue types and assigns it to the dedicated instance variable
+   */
   getAllIssueTypes(): void {
     this.issueTypeService.loadAllIssueTypes()
         .subscribe({
@@ -146,36 +164,9 @@ export class IssueEditComponent implements OnInit {
         });
   }
 
-/*   setNotification(notifyVia: string): void {
-    //TODO
-  } */
-
-  //registerForm.get('firstname').valid
-  //registerForm.get('passwordGroup.password').valid
-
-  /* get tags() {
-    if(this.editIssueForm) {
-      return <FormControl>this.editIssueForm.get('tags');
-    }
-    return null;
-  } */
-
-  /* addTag(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    // Add our tag
-    if ((value || '').trim()) {
-      this.tags.setValue([...this.tags.value, value.trim()]);
-      this.tags.updateValueAndValidity();
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-  } */
-
+  /**
+   * Method called upon pressing one of the defined separator keys in the mat-chip element
+   */
   addTag(event: MatChipInputEvent) {
     const input = event.input;
     const value = event.value;
@@ -207,6 +198,9 @@ export class IssueEditComponent implements OnInit {
     }
   } */
 
+  /**
+   * Method called upon clicking the delete button of a tag listed in the mat-chip element
+   */
   removeTag(tag: string): void {
     //let controller = this.editIssueForm.controls['tags'];
     const index = this.tags.indexOf(tag);
@@ -218,14 +212,21 @@ export class IssueEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Method called upon clicking the delete button associated with an image URL input field
+   */
   removeImageUrl(index: number): void {
     this.imageUrls.removeAt(index);
   }
 
+  /**
+   * Method called upon clicking the form submit button
+   */
   reportIssue(): void {
     if (this.editIssueForm.valid) {
       if (this.editIssueForm.dirty) {
 
+        // We build the issue request object to be sent to the API
         this.issueNewRequest.issueTypeHref = this.editIssueForm.get('issueType').value;
         this.issueNewRequest.description = this.editIssueForm.get('description').value;
         this.issueNewRequest.imageUrl = this.editIssueForm.get('imageUrls').value[0] ;
@@ -236,6 +237,7 @@ export class IssueEditComponent implements OnInit {
 
         console.log(this.issueNewRequest);
 
+        // We send the issue request object to the back-end
         this.issueService.updateIssue(this.id, this.issueNewRequest)
           .subscribe({
             next: () => this.onCreationComplete(),
@@ -249,12 +251,18 @@ export class IssueEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Method called upon sending the request object to the back-end
+   */
   onCreationComplete(): void {
     // Reset the form to clear the flags
     this.editIssueForm.reset();
     this.router.navigateByUrl("/issues");
   }
 
+  /**
+   * Method called upon clicking the map
+   */
   onLocationSet($event): void {
     console.log($event);
     this.mapClicked = true;
