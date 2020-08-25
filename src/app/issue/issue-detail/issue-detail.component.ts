@@ -10,6 +10,9 @@ import { IssueCommentRequest } from 'src/app/models/issue-comment-request';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ImageModalComponent } from '../image-modal/image-modal.component';
 
+/**
+ * Issue details page
+ */
 @Component({
   selector: 'app-issue-detail',
   templateUrl: './issue-detail.component.html',
@@ -27,11 +30,14 @@ export class IssueDetailComponent implements OnInit {
               private router: Router,
               private issueService: IssueService,
               private issueCommentService: IssueCommentService,
-              public matDialog: MatDialog) {
+              public matDialog: MatDialog)
+  {
     this.newCommentReq = new IssueCommentRequest();
   }
 
   ngOnInit(): void {
+    // We get the issue id from the respective route parameter,
+    // then we query the corresponding issue and the associated comments from the back-end
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.getIssue(this.id);
@@ -39,6 +45,9 @@ export class IssueDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * Method which gets the issue identified through its id and assign its attributes values to the respective instance variable
+   */
   getIssue(id: string): void {
     this.issueService.loadIssueWithDetails(id)
         .subscribe({
@@ -53,6 +62,9 @@ export class IssueDetailComponent implements OnInit {
         });
   }
 
+  /**
+   * Method which gets the commments for the issue identified through its id and assign the queried collection to the respective instance variable
+   */
   getCommentsForIssue(id: string): void {
     this.issueCommentService.loadAllCommentsForIssue(id)
     .subscribe({
@@ -63,28 +75,28 @@ export class IssueDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Method called upon clicking the new comment form submit button
+   */
   submitComment(form: NgForm)
   {
     // Only do something if the form is valid
     if (form.valid) {
-      // Hide any previous login error.
-      //this.newCommentError = false;
-
-      // Perform the authentication request to the API.
+      // Send the POST request to the API.
       this.issueCommentService.createCommentForIssue(this.id, this.newCommentReq.text).subscribe({
-        next: () => this.router.navigateByUrl("/"),
+        next: () => this.router.navigateByUrl("/issues"),
         error: (err) => {
-          //this.newCommentError = true;
           console.warn(`Could not submit comment: ${err.message}`);
         },
       });
     }
   }
 
+  /**
+   * Method called upon clicking a thumbnail card to display a modal containing an enlarged version of the image
+   */
   openModal(imageUrl: string) {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
-    //dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
     dialogConfig.height = "350px";
     dialogConfig.width = "600px";

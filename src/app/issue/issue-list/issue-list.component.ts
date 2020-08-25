@@ -58,8 +58,9 @@ export class IssueListComponent implements OnInit {
     this.issueCreators = [];
   }
 
-  ngOnInit(): void {
-
+  ngOnInit(): void
+  {
+    // Get the current user and assigns it to the dedicated instance variable for permissions checking
     this.auth.getUser().subscribe({
       next: (user) => this.currentUser = user,
       error: (err) => {
@@ -67,9 +68,11 @@ export class IssueListComponent implements OnInit {
       },
     });
 
+    // Get all issues
     this.getAllIssues();
     //this.issuePoints = [];
 
+    // Create a form to store the different filters
     this.issuesFilterForm = this.formBuilder.group({
       issueTypes:  '',
       issueCreators:  '',
@@ -78,10 +81,12 @@ export class IssueListComponent implements OnInit {
       location:    ''
     });
 
+    // Create a form to store the free search field
     this.issuesSearchForm = this.formBuilder.group({
       query:  ''
     });
 
+    // The query object to be passed in the payload of the request to the /issues/searches end-point
     this.queryObject = {issueType: {"$in": [ ]},
                         creator: {"$in": [ ]}
                       };
@@ -89,20 +94,25 @@ export class IssueListComponent implements OnInit {
     this.onChanges();
   }
 
+  /**
+   * Method which gets all issues and fill the table and select in with the issues' attributes values
+   */
   getAllIssues(): void {
     this.issueService.loadAllIssuesWithDetails()
         .subscribe({
             next: (issues: Issue[]) => {
               this.issues = issues;
+
+              // For sake of displaying the markers on the map
               this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
 
               console.log(this.issuePoints);
 
-              // To populate issue type filter (search type)
+              // To populate the issue type select
               this.issueTypeObjects = issues.map((issue: Issue) => issue.issueType);
-              this.issueTypeObjects = this.issueTypeObjects.sort(compareNames);
+              this.issueTypeObjects = this.issueTypeObjects.sort(compareNames); // sorts alphabetically
 
-              // Eliminate duplicate entries
+              // Eliminate duplicate issue type entries based on their name attribute
               this.issueTypeObjects = Object.values(
                 this.issueTypeObjects.reduce( (c, e) => {
                   if (!c[e.name]) c[e.name] = e;
@@ -123,8 +133,9 @@ export class IssueListComponent implements OnInit {
 
               // To populate creator filter (search type)
               this.issueCreatorObjects = issues.map((issue: Issue) => issue.creator);
-              this.issueCreatorObjects = this.issueCreatorObjects.sort(compareNames);
+              this.issueCreatorObjects = this.issueCreatorObjects.sort(compareNames); // sorts alphabetically
 
+              // Eliminate duplicate issue creator entries based on their name attribute
               this.issueCreatorObjects = Object.values(
                 this.issueCreatorObjects.reduce( (c, e) => {
                   if (!c[e.name]) c[e.name] = e;
@@ -134,6 +145,7 @@ export class IssueListComponent implements OnInit {
 
               console.log(this.issueCreatorObjects);
 
+              // Collect all issue creator IDs to perform original query for issues without any filtering
               for(let issueCreatorObject of this.issueCreatorObjects)
               {
                 this.issueCreators.push(issueCreatorObject.id);
@@ -144,7 +156,7 @@ export class IssueListComponent implements OnInit {
 
               // To populate issue state filter
               let states = issues.map((issue: Issue) => issue.state);
-              this.issueStates = [...new Set(states.sort())];
+              this.issueStates = [...new Set(states.sort())]; // makes states unique and sorted
 
               // To populate issue tags filter
               let tagArrays = issues.map((issue: Issue) => issue.tags);
@@ -157,9 +169,10 @@ export class IssueListComponent implements OnInit {
               }
               console.log(tags);
 
-              this.issueTags = [...new Set(tags.sort())];
+              this.issueTags = [...new Set(tags.sort())]; // makes tags unique and sorted
               console.log(this.issueTags);
 
+              // Build the query object to be passed in the payload of the request to the /issues/searches end-point
               this.queryObject["creator"]["$in"] = [...this.issueCreators];
               this.queryObject["issueType"]["$in"] = [...this.issueTypes];
               //this.queryObject["state"]["$in"] = [...this.issueStates];
@@ -171,6 +184,10 @@ export class IssueListComponent implements OnInit {
         });
   }
 
+  /**
+   * Method which reacts to changes of input values of the filter form in order to update the query object for filtering
+   * and trigger the search request with the updated query object
+   */
   onChanges(): void {
     this.issuesFilterForm.valueChanges.subscribe(settings => {
       console.log(settings.issueTypes);
@@ -198,6 +215,7 @@ export class IssueListComponent implements OnInit {
         this.queryObject["creator"]["$in"] = [...settings.issueCreators];
       }
 
+      // Perform new search request with the updated query object
       this.searchIssues(this.queryObject);
 
 /*      if(settings.issueTags)
@@ -210,10 +228,15 @@ export class IssueListComponent implements OnInit {
     });
   }
 
+  /**
+   * Method called upon clicking the submit button of the issuesSearchForm form
+   */
   search()
   {
     this.searchString = this.issuesSearchForm.get('query').value;
 
+    // trigger a fresh request to the /issues/searches end-point, then filter the issues to keep those
+    // whose description matches the search string
     this.issueService.searchIssues(this.queryObject)
       .subscribe({
           next: (issues: Issue[]) => {
@@ -270,6 +293,9 @@ export class IssueListComponent implements OnInit {
     this.router.navigateByUrl(`issue/{id}`);
   } */
 
+  /**
+   * Method called upon clicking the delete button associated to an issue which is identified through its id
+   */
   deleteIssue(id: string)
   {
     this.issueService.deleteIssue(id).subscribe({
@@ -280,6 +306,9 @@ export class IssueListComponent implements OnInit {
     });
   }
 
+  /**
+   * Method which checks whether the current user has the 'staff' role
+   */
   isStaff(): boolean
   {
 /*     this.auth.isStaff().subscribe({
@@ -291,6 +320,9 @@ export class IssueListComponent implements OnInit {
     return this.currentUser.roles.includes('staff');
   }
 
+  /**
+   * Method which checks whether the current user is the author of a specific issue identified through its id
+   */
   isAuthor(creator: User): boolean
   {
     return this.currentUser.id === creator.id;
