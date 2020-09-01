@@ -17,7 +17,6 @@ import { MapComponent } from './issue/map/map.component';
 import { IssueNewComponent } from './issue/issue-new/issue-new.component';
 import { IssueListComponent } from './issue/issue-list/issue-list.component';
 
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +27,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
 import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
 import { ImageModalComponent } from './issue/image-modal/image-modal.component';

@@ -8,7 +8,7 @@ import { GeolocationService } from 'src/app/shared/services/geolocation.service'
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
+export class MapComponent implements OnDestroy {
 
   @Input() mapPoints: Point[];
   @Input() center: Point;
@@ -18,6 +18,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   map: L.Map;
   position: Position;
   markers: any[];
+  ready: boolean;
 
   smallIcon = new L.Icon({
     // This define the displayed icon size, in pixel
@@ -36,6 +37,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     console.log(this.mapPoints);
 
     this.markers = [];
+    this.ready = false;
 
     if(!this.center) {
       this.geolocation
@@ -57,19 +59,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.map.remove();
   }
-/*
+
   onMapReady(map: L.Map) {
-    this.map = map;
-  } */
-
-  ngAfterViewInit(): void {
-    console.log(this.mapPoints);
-
     this.geolocation
     .getCurrentPosition()
     .then((position) => {
       this.position = position;
-      this.createMap(this.position);
+      this.createMap(map, this.position);
       console.log(this.map);
       console.log(this.mapPoints);
       this.mapPoints.forEach((point) => {
@@ -79,18 +75,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         console.log(this.markers);
       });
     })
-    //this.createMap();
+    this.ready = true;
   }
+
 
   ngOnChanges(changes: SimpleChanges) {
 
-    console.log(this.mapPoints);
-
-    if(changes.mapPoints.previousValue)
+    if(this.ready)
     {
-      for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
+      if(changes.mapPoints.previousValue)
       {
-        this.map.removeLayer(this.markers[i]);
+        for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
+        {
+          //this.map.removeLayer(this.markers[i]);
+        }
       }
     }
 
@@ -113,7 +111,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return L.marker(L.latLng([point.coordinates[1],point.coordinates[0]]), { icon: this.smallIcon });
   }
 
-  createMap(position: Position) {
+  createMap(map: L.Map, position: Position) {
+    this.map = map;
+
     const center = {
       lat: position.coords.latitude,
       lng: position.coords.longitude
@@ -121,10 +121,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const zoomLevel = 13;
 
-    this.map = L.map('map', {
-      center: [center.lat, center.lng],
-      zoom: zoomLevel
-    });//.locate({setView: true, maxZoom: 16});
+    this.map.setView(
+      [center.lat, center.lng],
+      zoomLevel
+    );//.locate({setView: true, maxZoom: 16});
 
     const mainLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       minZoom: 1,

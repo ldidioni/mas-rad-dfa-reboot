@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import { Observable, of } from "rxjs";
 import { Issue } from "src/app/models/issue";
 import { environment } from "../../../environments/environment";
 import { IssueNewRequest } from 'src/app/models/issue-new-request';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -19,6 +19,17 @@ export class IssueService
     return this.http.get<Issue[]>(`${environment.apiUrl}/issues`);
   }
 
+  getTotalNumberOfPages(): Observable<number>
+  {
+    return this.http.get(`${environment.apiUrl}/issues`, { observe: 'response' })
+    .pipe(map(response => Math.ceil(parseInt(response.headers.get('Pagination-Total')) / 20)));
+  }
+
+  loadIssuesWithDetailsForPageOfIndex(index: number): Observable<Issue[]>
+  {
+    return this.http.get<Issue[]>(`${environment.apiUrl}/issues?page=${index}&include=creator&include=issueType&include=assignee`);
+  }
+
   loadAllIssuesWithDetails(): Observable<Issue[]>
   {
     return this.http.get<Issue[]>(`${environment.apiUrl}/issues?include=creator&include=issueType&include=assignee`);
@@ -29,6 +40,24 @@ export class IssueService
     const headers = new HttpHeaders({ 'Content-type': 'application/json'});
 
     return this.http.post<Issue[]>(`${environment.apiUrl}/issues/searches?sort=-updatedAt&include=creator&include=issueType&include=assignee`, queryObject, { headers: headers });
+  }
+
+  searchGetTotalNumberOfPages(queryObject: any): Observable<number>
+  {
+    const headers = new HttpHeaders({ 'Content-type': 'application/json'});
+
+    return this.http.post<Issue[]>(
+        `${environment.apiUrl}/issues/searches?sort=-updatedAt&include=creator&include=issueType&include=assignee`,
+        queryObject,
+        { headers: headers, observe: 'response' })
+      .pipe(map(response => Math.ceil(parseInt(response.headers.get('Pagination-Total')) / 20)));
+  }
+
+  searchIssuesForPageOfIndex(queryObject: any, index: number): Observable<Issue[]>
+  {
+    const headers = new HttpHeaders({ 'Content-type': 'application/json'});
+
+    return this.http.post<Issue[]>(`${environment.apiUrl}/issues/searches?page=${index}&sort=-updatedAt&include=creator&include=issueType&include=assignee`, queryObject, { headers: headers });
   }
 
   loadIssueWithDetails(id: string): Observable<Issue>

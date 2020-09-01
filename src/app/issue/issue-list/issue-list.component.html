@@ -171,6 +171,14 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <!--
+<mat-paginator [length]="totalNbOfPages"
+               [pageSize]="20"
+               [pageSizeOptions]="[20]"
+               [pageIndex]="currentPage"
+               (page)="getIssuesForCurrentPage($event)">
+</mat-paginator>
+-->
+<!--
 <app-issue-map [mapPoints]="issuePoints"></app-issue-map>
 -->
 <app-map [mapPoints]="issuePoints" [clickable]="false"></app-map>

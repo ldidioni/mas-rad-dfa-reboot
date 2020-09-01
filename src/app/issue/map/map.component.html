@@ -1,6 +1,8 @@
 <mat-card class="map-wrapper mt-2 mb-2">
     <div class="map-border">
-        <div id="map">
+        <div leaflet
+        id="map"
+        (leafletMapReady)="onMapReady($event)">
         </div>
     </div>
 </mat-card>
