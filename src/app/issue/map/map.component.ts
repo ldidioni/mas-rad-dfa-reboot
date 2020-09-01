@@ -68,16 +68,9 @@ export class MapComponent implements OnDestroy {
       this.createMap(map, this.position);
       console.log(this.map);
       console.log(this.mapPoints);
-      this.mapPoints.forEach((point) => {
-        let marker = this.buildMarker(point);
-        marker.addTo(this.map);
-        this.markers.push(marker);
-        console.log(this.markers);
-      });
+      this.ready = true;
     })
-    this.ready = true;
   }
-
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -85,26 +78,26 @@ export class MapComponent implements OnDestroy {
     {
       if(changes.mapPoints.previousValue)
       {
-        for(let i = 0; i < changes.mapPoints.previousValue.length; i++)
+        for(let i = 0; i < this.markers.length; i++)
         {
-          //this.map.removeLayer(this.markers[i]);
+          this.map.removeLayer(this.markers[i]);
         }
       }
+
+      this.markers = [];
+
+      this.mapPoints = changes.mapPoints.currentValue;
+      console.log(changes.mapPoints.currentValue);
+      //this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
+      let i = 1;
+      this.mapPoints.forEach((point) => {
+        console.log(i++);
+        let marker = this.buildMarker(point)
+        marker.addTo(this.map);
+        this.markers.push(marker);
+        console.log(this.markers);
+      });
     }
-
-    this.markers = [];
-
-    this.mapPoints = changes.mapPoints.currentValue;
-    console.log(changes.mapPoints.currentValue);
-    //this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
-    let i = 1;
-    this.mapPoints.forEach((point) => {
-      console.log(i++);
-      let marker = this.buildMarker(point)
-      marker.addTo(this.map);
-      this.markers.push(marker);
-      console.log(this.markers);
-    });
   }
 
   buildMarker(point: Point): L.Marker<any> {
@@ -112,6 +105,7 @@ export class MapComponent implements OnDestroy {
   }
 
   createMap(map: L.Map, position: Position) {
+
     this.map = map;
 
     const center = {
@@ -121,10 +115,7 @@ export class MapComponent implements OnDestroy {
 
     const zoomLevel = 13;
 
-    this.map.setView(
-      [center.lat, center.lng],
-      zoomLevel
-    );//.locate({setView: true, maxZoom: 16});
+    this.map.setView([center.lat, center.lng], zoomLevel);//.locate({setView: true, maxZoom: 16});
 
     const mainLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       minZoom: 1,
