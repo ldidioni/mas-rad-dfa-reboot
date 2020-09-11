@@ -74,7 +74,7 @@ export class MapComponent implements OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
 
-    if(this.ready)
+    if(this.ready)  // delays the effect of ngOnChanges until map is ready
     {
       if(changes.mapPoints.previousValue)
       {
