@@ -113,7 +113,7 @@ export class IssueNewComponent implements OnInit
     this.issueTypeService.loadAllIssueTypes()
         .subscribe({
             next: (issueTypes: IssueType[]) => this.issueTypes = issueTypes,
-            error: err => this.messagingService.open(err)
+            error: () => this.messagingService.open('Could not populate issue types list!')
         });
   }
 
@@ -198,7 +198,7 @@ export class IssueNewComponent implements OnInit
         this.issueService.createIssue(this.issueNewRequest)
           .subscribe({
             next: () => this.onCreationComplete(),
-            error: err => this.messagingService.open(err)
+            error: err => this.messagingService.open('Could not report issue!')
           });
 
       } else {

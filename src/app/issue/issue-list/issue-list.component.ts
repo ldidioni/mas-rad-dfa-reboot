@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/security/auth.service';
 import { User } from 'src/app/models/user';
 import { Observable, concat, of } from 'rxjs';
+import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 /**
  * Function that sorts strings (used for options in select)
@@ -58,6 +59,7 @@ export class IssueListComponent implements OnInit {
 
   constructor(private issueService: IssueService,
               private auth: AuthService,
+              private messagingService: MessagingService,
               private formBuilder: FormBuilder,
               private router: Router)
   {
@@ -181,7 +183,7 @@ export class IssueListComponent implements OnInit {
 
                 console.log(this.issues);
               },
-              //error: err => this.errorMessage = err
+              error: () => this.messagingService.open('Could not fetch issues!')
           });
         });
 
@@ -404,7 +406,7 @@ export class IssueListComponent implements OnInit {
 
               console.log(this.issues);
               console.log(this.issuePoints);},
-            //error: err => this.errorMessage = err
+            error: () => this.messagingService.open('Could not fetch issues!')
         });
   }
 
@@ -475,7 +477,8 @@ export class IssueListComponent implements OnInit {
               this.issues = this.issues.filter(issue => issue.description.includes(this.searchString));
               console.log(this.issues);
             }
-          }
+          },
+          error: () => this.messagingService.open('Could not search for issues!')
       });
   }
 
@@ -602,7 +605,7 @@ export class IssueListComponent implements OnInit {
                 console.log(this.issues);
               }
             },
-            //error: err => this.errorMessage = err
+            error: () => this.messagingService.open('Could not search for issues!')
         });
       });
 
@@ -652,6 +655,7 @@ export class IssueListComponent implements OnInit {
     this.issueService.deleteIssue(id).subscribe({
       next: () => this.getAllIssues(),
       error: (err) => {
+        this.messagingService.open('Could not delete issue!')
         console.warn(`Could not delete issue: ${err.message}`);
       },
     });

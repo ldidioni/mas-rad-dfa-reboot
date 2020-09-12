@@ -4,6 +4,7 @@ import { RegistrationRequest } from 'src/app/models/registration-request';
 import { debounceTime, map } from 'rxjs/operators';
 import { UserService } from 'src/app/api/services/user.service';
 import { Router } from '@angular/router';
+import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 /**
  * Custom form validator which checks for the value of the password repeat field to match the value of the original password field
@@ -37,11 +38,10 @@ export class RegisterPageComponent implements OnInit {
   registerForm: FormGroup;
   registration: RegistrationRequest;  // the registration object aimed at being sent to the API
 
-  errorMessage: string;
-
   constructor(private formBuilder: FormBuilder,
               private router: Router,
-              private userService: UserService)
+              private userService: UserService,
+              private messagingService: MessagingService)
   {
     // We initialize the registration object aimed at being sent to the API
     this.registration = new RegistrationRequest();
@@ -91,13 +91,13 @@ export class RegisterPageComponent implements OnInit {
         this.userService.createUser(this.registration)
           .subscribe({
             next: () => this.onRegistrationComplete(),
-            error: err => this.errorMessage = err
+            error: () => this.messagingService.open('Could not register!')
           });
       } else {  // if ever the user manages to submit the form although it is pristine, we skip the call to the API
         this.onRegistrationComplete();
       }
     } else {    // the form is invalid
-      this.errorMessage = 'Please correct the validation errors.';
+      this.messagingService.open('Please correct the validation errors.');
     }
   }
 
@@ -105,6 +105,7 @@ export class RegisterPageComponent implements OnInit {
    * Method called upon sending the registration object to the back-end
    */
   onRegistrationComplete(): void {
+    this.messagingService.open('You have successfully registered.')
     this.registerForm.reset();            // Reset the form to clear the flags
     this.router.navigateByUrl("/issues")
   }

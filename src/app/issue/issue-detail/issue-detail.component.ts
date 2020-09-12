@@ -9,6 +9,7 @@ import { IssueComment } from 'src/app/models/issue-comment';
 import { IssueCommentRequest } from 'src/app/models/issue-comment-request';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ImageModalComponent } from '../image-modal/image-modal.component';
+import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 /**
  * Issue details page
@@ -30,6 +31,7 @@ export class IssueDetailComponent implements OnInit {
               private router: Router,
               private issueService: IssueService,
               private issueCommentService: IssueCommentService,
+              private messagingService: MessagingService,
               public matDialog: MatDialog)
   {
     this.newCommentReq = new IssueCommentRequest();
@@ -58,7 +60,7 @@ export class IssueDetailComponent implements OnInit {
               console.log(this.issue);
               console.log(this.issuePoint);
             },
-            //error: err => this.errorMessage = err
+            error: err => this.messagingService.open('Could not retrieve issue!')
         });
   }
 
@@ -71,7 +73,7 @@ export class IssueDetailComponent implements OnInit {
       next: (comments: IssueComment[]) => {
         this.comments = comments;
       },
-       //error: err => this.errorMessage = err
+      error: () => this.messagingService.open('Could not retrieve comments for issue!')
     });
   }
 
@@ -86,6 +88,7 @@ export class IssueDetailComponent implements OnInit {
       this.issueCommentService.createCommentForIssue(this.id, this.newCommentReq.text).subscribe({
         next: () => this.router.navigateByUrl("/issues"),
         error: (err) => {
+          this.messagingService.open('Could not submit comment!');
           console.warn(`Could not submit comment: ${err.message}`);
         },
       });

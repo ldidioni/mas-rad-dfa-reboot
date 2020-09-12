@@ -8,6 +8,7 @@ import { IssueType } from 'src/app/models/issue-type';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 /**
  * Custom form validator which checks for every tags in the value array to have acceptable lengths
@@ -41,7 +42,6 @@ export class IssueEditComponent implements OnInit {
   issueNewRequest: IssueNewRequest; // the issue request object aimed at being sent to the API
   issueTypes: IssueType[];
 
-  errorMessage: string;
   mapClicked: boolean;
 
   tags: string[];
@@ -56,6 +56,7 @@ export class IssueEditComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private issueTypeService: IssueTypeService,
+              private messagingService: MessagingService,
               private issueService: IssueService)
   {
     this.tags = [];
@@ -124,7 +125,7 @@ export class IssueEditComponent implements OnInit {
               console.log(this.issue);
               console.log(this.issuePoint);
             },
-            //error: err => this.errorMessage = err
+            error: () => this.messagingService.open('Could not retrieve issue!')
         });
   }
 
@@ -160,7 +161,7 @@ export class IssueEditComponent implements OnInit {
     this.issueTypeService.loadAllIssueTypes()
         .subscribe({
             next: (issueTypes: IssueType[]) => this.issueTypes = issueTypes,
-            //error: err => this.errorMessage = err
+            error: () => this.messagingService.open('Could not populate issue types list!')
         });
   }
 
@@ -241,20 +242,22 @@ export class IssueEditComponent implements OnInit {
         this.issueService.updateIssue(this.id, this.issueNewRequest)
           .subscribe({
             next: () => this.onCreationComplete(),
-            error: err => this.errorMessage = err
+            error: () => this.messagingService.open('Could not update issue!')
           });
       } else {
         this.onCreationComplete();
       }
     } else {
-      this.errorMessage = 'Please correct the validation errors.';
+      this.messagingService.open('Please correct the validation errors.');
     }
   }
 
   /**
    * Method called upon sending the request object to the back-end
    */
-  onCreationComplete(): void {
+  onCreationComplete(): void
+  {
+    this.messagingService.open('Issue successfully updated.');
     // Reset the form to clear the flags
     this.editIssueForm.reset();
     this.router.navigateByUrl("/issues");
