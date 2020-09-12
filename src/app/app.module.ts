@@ -28,13 +28,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { IssueDetailComponent } from './issue/issue-detail/issue-detail.component';
 import { IssueEditComponent } from './issue/issue-edit/issue-edit.component';
 import { ImageModalComponent } from './issue/image-modal/image-modal.component';
 import { TextShortenPipe } from './shared/text-shorten.pipe';
 import { CamelcaseToHyphenPipe } from './shared/camelcase-to-hyphen.pipe';
 import { HyphenToSpacePipe } from './shared/hyphen-to-space.pipe';
-
 
 
 @NgModule({
@@ -68,6 +68,7 @@ import { HyphenToSpacePipe } from './shared/hyphen-to-space.pipe';
     MatInputModule,
     MatFormFieldModule,
     MatPaginatorModule,
+    MatSnackBarModule,
     MatSelectModule,
     MatTableModule,
     MatToolbarModule,

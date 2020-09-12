@@ -8,6 +8,7 @@ import { IssueType } from 'src/app/models/issue-type';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
+import { MessagingService } from 'src/app/shared/services/messaging.service';
 
 /**
  * Custom form validator which checks for every tags in the value array to have acceptable lengths
@@ -38,7 +39,6 @@ export class IssueNewComponent implements OnInit
   newIssueForm: FormGroup;
   issueNewRequest: IssueNewRequest; // the issue request object aimed at being sent to the API
 
-  errorMessage: string;
   mapClicked: boolean;
 
   issueTypes: IssueType[];
@@ -53,7 +53,8 @@ export class IssueNewComponent implements OnInit
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private issueTypeService: IssueTypeService,
-              private issueService: IssueService)
+              private issueService: IssueService,
+              private messagingService: MessagingService)
   {
     this.tags = [];
     // We initialize the issue request object aimed at being sent to the API
@@ -112,7 +113,7 @@ export class IssueNewComponent implements OnInit
     this.issueTypeService.loadAllIssueTypes()
         .subscribe({
             next: (issueTypes: IssueType[]) => this.issueTypes = issueTypes,
-            //error: err => this.errorMessage = err
+            error: err => this.messagingService.open(err)
         });
   }
 
@@ -197,13 +198,14 @@ export class IssueNewComponent implements OnInit
         this.issueService.createIssue(this.issueNewRequest)
           .subscribe({
             next: () => this.onCreationComplete(),
-            error: err => this.errorMessage = err
+            error: err => this.messagingService.open(err)
           });
+
       } else {
         this.onCreationComplete();
       }
     } else {
-      this.errorMessage = 'Please correct the validation errors.';
+      this.messagingService.open('Please correct the validation errors.');
     }
   }
 
@@ -212,6 +214,7 @@ export class IssueNewComponent implements OnInit
    */
   onCreationComplete(): void
   {
+    this.messagingService.open('Your issue was reported successfully.');
     // Reset the form to clear the flags
     this.newIssueForm.reset();
     this.router.navigateByUrl("/issues");
