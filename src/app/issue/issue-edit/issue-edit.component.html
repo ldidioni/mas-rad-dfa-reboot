@@ -23,18 +23,7 @@
             </span>
         </mat-error>
     </mat-form-field>
-<!--
-    <label for="imageUrlId">Image URL</label>
-    <input
-        id="imageUrlId"
-        type="text"
-        placeholder="Image URL"
-        formControlName="imageUrl"
-        [ngClass]="{ 'is-invalid': descriptionMessage }" />
-    <span class="invalid-feedback">
-        {{ descriptionMessage }}
-    </span>
--->
+
     <div formArrayName="imageUrls">
         <div *ngFor="let imageUrl of imageUrls?.controls; let i=index">
             <div>
@@ -125,10 +114,6 @@
         </mat-error>
     </mat-form-field>
 
-  <!--  <app-issue-map
-        (location)="onLocationSet">
-    </app-issue-map>-->
-
     <app-map
         [mapPoints]="issuePoint"
         [clickable]="true"
@@ -146,7 +131,6 @@
 
 </form>
 
-
-<p>
+<p style="display: none;">
     Form value: {{ editIssueForm.value | json }}
 </p>

@@ -76,23 +76,10 @@
 
       <app-map [mapPoints]="issuePoint" [clickable]="false"></app-map>
 
-      <div class="row mt-4">
-        <div class="col-4">
-          <button class="btn btn-outline-secondary mr-3"
-                  style="width:80px">
-            <i class="fa fa-chevron-left"></i> Back
-          </button>
-          <button class="btn btn-outline-primary"
-                  style="width:80px"
-                  [routerLink]="['/issues', issue.id, 'edit']">
-            Edit
-          </button>
-        </div>
-      </div>
     </div>
 
   </div>
-  <div *ngFor="let comment of comments">
+  <div *ngFor="let comment of comments" class="card-body">
     <div>{{ comment.author.name }}</div>
     <div>{{ comment.createdAt | date: 'mediumDate' }}</div>
     <div>{{ comment.text }}</div>

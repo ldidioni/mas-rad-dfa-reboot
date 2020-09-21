@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 
+/**
+ * Service which governs the instantiation of a snackbar to display success or error messages
+ */
 @Injectable({
   providedIn: 'root'
 })
