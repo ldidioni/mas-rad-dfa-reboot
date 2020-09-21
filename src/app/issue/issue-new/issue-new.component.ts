@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray, FormControl } from '@angular/forms';
 import { IssueNewRequest } from 'src/app/models/issue-new-request';
 import { Point } from 'src/app/models/issue';
@@ -54,7 +54,8 @@ export class IssueNewComponent implements OnInit
               private router: Router,
               private issueTypeService: IssueTypeService,
               private issueService: IssueService,
-              private messagingService: MessagingService)
+              private messagingService: MessagingService,
+              private changeDetectorRef: ChangeDetectorRef)
   {
     this.tags = [];
     // We initialize the issue request object aimed at being sent to the API
@@ -76,7 +77,10 @@ export class IssueNewComponent implements OnInit
       location:     [null, [Validators.required]]
     });
 
-    this.newIssueForm.controls['tags'].setValue(this.tags);
+    // Enables UI update following changes of 'location' form control value
+    this.newIssueForm.valueChanges.subscribe( () => {
+      this.changeDetectorRef.detectChanges()
+    });
   }
 
   /**
