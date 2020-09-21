@@ -12,7 +12,6 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { SecurityModule } from './security/security.module';
 import { DummyPageComponent } from './dummy-page/dummy-page.component';
 import { MenuComponent } from './menu/menu.component';
-import { IssueMapComponent } from './issue/issue-map/issue-map.component';
 import { MapComponent } from './issue/map/map.component';
 import { IssueNewComponent } from './issue/issue-new/issue-new.component';
 import { IssueListComponent } from './issue/issue-list/issue-list.component';
@@ -43,7 +42,6 @@ import { HyphenToSpacePipe } from './shared/hyphen-to-space.pipe';
     DummyPageComponent,
     MenuComponent,
     MapComponent,
-    IssueMapComponent,
     IssueNewComponent,
     IssueListComponent,
     IssueDetailComponent,
