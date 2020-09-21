@@ -73,7 +73,7 @@ export class IssueNewComponent implements OnInit
       issueType:    ['', [Validators.required]],
       imageUrls:    this.formBuilder.array([this.buildImageUrl()]), // stores the multiple image URLs
       tags:         [this.tags, [Validators.required, checkTagLength]],
-      location:     ['', [Validators.required]]
+      location:     [null, [Validators.required]]
     });
 
     this.newIssueForm.controls['tags'].setValue(this.tags);
@@ -228,6 +228,8 @@ export class IssueNewComponent implements OnInit
     console.log($event);
     this.mapClicked = true;
     this.newIssueForm.get('location').setValue(new Point($event));
+    this.newIssueForm.get('location').updateValueAndValidity();
+    //this.newIssueForm.updateValueAndValidity();
     //this.issueNewRequest.location = new Point($event);
   }
 

@@ -139,7 +139,7 @@ export class MapComponent implements OnDestroy {
 
         const marker = L.marker([e.latlng.lat, e.latlng.lng],
           { icon: this.smallIcon });
-        marker.addTo(this.map).bindPopup('blabla');
+        marker.addTo(this.map).bindPopup('yet another issue');
         this.markers.push(marker);
         this.location.emit([e.latlng.lng, e.latlng.lat]);
       });

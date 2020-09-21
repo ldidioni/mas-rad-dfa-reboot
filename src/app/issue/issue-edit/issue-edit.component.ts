@@ -270,6 +270,7 @@ export class IssueEditComponent implements OnInit {
     console.log($event);
     this.mapClicked = true;
     this.editIssueForm.get('location').setValue(new Point($event));
+    this.editIssueForm.get('location').updateValueAndValidity();
     //this.issueNewRequest.location = new Point($event);
   }
 }

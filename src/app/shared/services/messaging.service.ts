@@ -11,7 +11,7 @@ export class MessagingService {
 
   constructor(public snackBar: MatSnackBar) { }
 
-  public open(message, action = '', duration = 30000)
+  public open(message, action = '', duration = 5000)
   {
     this.snackBar.open(message, action, { duration });
   }
