@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray, FormControl } from '@angular/forms';
 import { IssueNewRequest } from 'src/app/models/issue-new-request';
 import { Point, Issue } from 'src/app/models/issue';
@@ -57,7 +57,8 @@ export class IssueEditComponent implements OnInit {
               private router: Router,
               private issueTypeService: IssueTypeService,
               private messagingService: MessagingService,
-              private issueService: IssueService)
+              private issueService: IssueService,
+              private changeDetectorRef: ChangeDetectorRef)
   {
     this.tags = [];
     // We initialize the issue request object aimed at being sent to the API
@@ -79,7 +80,10 @@ export class IssueEditComponent implements OnInit {
       location:     ['', [Validators.required]]
     });
 
-    //this.editIssueForm.controls['tags'].setValue(this.tags);
+    // Enables UI update following changes of 'location' form control value
+    this.editIssueForm.valueChanges.subscribe( () => {
+      this.changeDetectorRef.detectChanges()
+    });
 
     // We get the issue id from the respective route parameter, then we query the corresponding issue from the back-end to fill the form in
     this.id = this.route.snapshot.paramMap.get('id');
