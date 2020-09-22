@@ -459,7 +459,6 @@ export class IssueListComponent implements OnInit {
    */
   search()
   {
-    console.log('raaaaaaaaaaaaaaah');
     console.log(this.issues);
     this.searchString = this.issuesSearchForm.get('query').value;
 
@@ -634,19 +633,6 @@ export class IssueListComponent implements OnInit {
         }); */
   }
 
-
-/*   searchIssues(event: LeafletMouseEvent, radius: number) {
-    this.issuePoints = this.issuePoints.filter((issuePoint: Point) => {
-      event.latlng.distanceTo(L.latLng(
-        issuePoint.coordinates[1],
-        issuePoint.coordinates[0])) < radius;
-    });
-  } */
-
- /*  onDetailClick(id: string) {
-    this.router.navigateByUrl(`issue/{id}`);
-  } */
-
   /**
    * Method called upon clicking the delete button associated to an issue which is identified through its id
    */
@@ -688,5 +674,4 @@ export class IssueListComponent implements OnInit {
       },
     }); */
   }
-
 }

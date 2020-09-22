@@ -146,32 +146,3 @@ export class MapComponent implements OnDestroy {
     }
   }
 }
-
-/*
-    var arrayOfLatLngs = [];
-    var _this = this;
-
-    // setup a marker group
-    var markers = L.markerClusterGroup();
-
-    events.forEach(function (event) {
-        // setup the bounds
-        arrayOfLatLngs.push(event.location);
-
-        // create the marker
-        var marker = L.marker([event.location.lat, event.location.lng]);
-
-        marker.bindPopup(View(event));
-
-        // add marker
-        markers.addLayer(marker);
-    });
-
-    // add the group to the map
-    // for more see https://github.com/Leaflet/Leaflet.markercluster
-    this.map.addLayer(markers);
-
-    var bounds = new L.LatLngBounds(arrayOfLatLngs);
-    this.map.fitBounds(bounds);
-    this.map.invalidateSize();
-    */

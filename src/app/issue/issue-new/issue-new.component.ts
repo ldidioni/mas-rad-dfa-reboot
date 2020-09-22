@@ -236,19 +236,4 @@ export class IssueNewComponent implements OnInit
     //this.newIssueForm.updateValueAndValidity();
     //this.issueNewRequest.location = new Point($event);
   }
-
-/*
-  const issueTypeHrefControl = this.newIssueForm.get('issueType');
-  issueTypeHrefControl.valueChanges.pipe(
-    debounceTime(1000)
-  ).subscribe(
-    value => this.setIssueTypeHrefMessage(issueTypeHrefControl)
-  );
-  const imageControl = this.newIssueForm.get('images.0');
-  imageControl.valueChanges.pipe(
-    debounceTime(1000)
-  ).subscribe(
-    value => this.setImageUrlMessage(imageControl)
-  );
-   */
 }

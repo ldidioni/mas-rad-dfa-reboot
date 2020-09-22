@@ -90,10 +90,6 @@ export class IssueEditComponent implements OnInit {
     if (this.id) {
       this.getIssue(this.id);
     }
-
-/*     this.editIssueForm.get('issueType').valueChanges.subscribe(item => {
-      this.issueTypes = item.issueTypes
-    }); */
   }
 
   /**
@@ -193,15 +189,6 @@ export class IssueEditComponent implements OnInit {
       this.editIssueForm.controls['tags'].updateValueAndValidity();  // 7
     }
   }
-
-  /* removeTag(tag: string): void {
-    const index = this.tags.value.indexOf(tag);
-
-    if (index >= 0) {
-      this.tags.value.splice(index, 1);
-      this.tags.updateValueAndValidity();
-    }
-  } */
 
   /**
    * Method called upon clicking the delete button of a tag listed in the mat-chip element
