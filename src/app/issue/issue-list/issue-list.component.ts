@@ -86,6 +86,7 @@ export class IssueListComponent implements OnInit {
       },
     });
 
+    // Get all issues and populate instance variable with fetched data
     this.issueService.getTotalNumberOfPages()
       .subscribe(nb =>
         {
@@ -101,7 +102,7 @@ export class IssueListComponent implements OnInit {
               next: (issues: Issue[]) => {
 
                 this.issues.push(...issues);
-                this.issues = this.issues.slice();  // Force change detection
+                this.issues = this.issues.slice();  // Force change detection by triggering a change of reference
 
                 // For sake of displaying the markers on the map
                 this.issuePoints.push(...issues.map((issue: Issue) => new Point(issue.location.coordinates)));
@@ -127,7 +128,7 @@ export class IssueListComponent implements OnInit {
                   this.issueTypes.push(issueTypeObject.id);
                 }
                 this.issueTypes = [...new Set(this.issueTypes)];
-                this.issueTypes = this.issueTypes.slice();
+                this.issueTypes = this.issueTypes.slice();  // Force change detection by triggering a change of reference
 
                 console.log(this.issueTypes);
 
@@ -151,6 +152,8 @@ export class IssueListComponent implements OnInit {
                 {
                   this.issueCreators.push(issueCreatorObject.id);
                 }
+
+                // Eliminate duplicate issue creator IDs
                 this.issueCreators = [...new Set(this.issueCreators)];
 
                 console.log(this.issueCreators);
@@ -187,10 +190,6 @@ export class IssueListComponent implements OnInit {
           });
         });
 
-    // Get all issues
-    //this.getAllIssues();
-    //this.issuePoints = [];
-
     // Create a form to store the different filters
     this.issuesFilterForm = this.formBuilder.group({
       issueTypes:  '',
@@ -212,113 +211,6 @@ export class IssueListComponent implements OnInit {
 
     this.onChanges();
   }
-
-  /**
-   * Enables initial set of points to be passed in one go for the initialization of the map
-   */
-/*   ngDoCheck(): void
-  {
-    of(this.issuePoints_temp).subscribe(
-      (issuePoints) =>
-      {
-        this.issuePoints = issuePoints;
-        console.log(this.issuePoints);
-      })
-  } */
-
-  /* getIssuesForCurrentPage(event: any)
-  {
-    this.currentPage = event.pageIndex;
-    this.getIssuesForPageByIndex(this.currentPage);
-  }
-
-  getIssuesForPageByIndex(index: number): void
-  {
-    this.issueService.loadIssuesWithDetailsForPageOfIndex(index)
-      .subscribe({
-        next: (issues: Issue[]) => {
-          this.issues = issues;
-
-          // For sake of displaying the markers on the map
-          this.issuePoints = issues.map((issue: Issue) => new Point(issue.location.coordinates));
-
-          console.log(this.issuePoints);
-
-          // To populate the issue type select
-          this.issueTypeObjects = issues.map((issue: Issue) => issue.issueType);
-          this.issueTypeObjects = this.issueTypeObjects.sort(compareNames); // sorts alphabetically
-
-          // Eliminate duplicate issue type entries based on their name attribute
-          this.issueTypeObjects = Object.values(
-            this.issueTypeObjects.reduce( (c, e) => {
-              if (!c[e.name]) c[e.name] = e;
-              return c;
-            }, {})
-          );
-
-          console.log(this.issueTypeObjects);
-
-          // Collect all issue type IDs to perform original query for issues without any filtering
-          for(let issueTypeObject of this.issueTypeObjects)
-          {
-            this.issueTypes.push(issueTypeObject.id);
-          }
-          this.issueTypes = [...new Set(this.issueTypes)];
-
-          console.log(this.issueTypes);
-
-          // To populate creator filter (search type)
-          this.issueCreatorObjects = issues.map((issue: Issue) => issue.creator);
-          this.issueCreatorObjects = this.issueCreatorObjects.sort(compareNames); // sorts alphabetically
-
-          // Eliminate duplicate issue creator entries based on their name attribute
-          this.issueCreatorObjects = Object.values(
-            this.issueCreatorObjects.reduce( (c, e) => {
-              if (!c[e.name]) c[e.name] = e;
-              return c;
-            }, {})
-          );
-
-          console.log(this.issueCreatorObjects);
-
-          // Collect all issue creator IDs to perform original query for issues without any filtering
-          for(let issueCreatorObject of this.issueCreatorObjects)
-          {
-            this.issueCreators.push(issueCreatorObject.id);
-          }
-          this.issueCreators = [...new Set(this.issueCreators)];
-
-          console.log(this.issueCreators);
-
-          // To populate issue state filter
-          let states = issues.map((issue: Issue) => issue.state);
-          this.issueStates = [...new Set(states.sort())]; // makes states unique and sorted
-
-          // To populate issue tags filter
-          let tagArrays = issues.map((issue: Issue) => issue.tags);
-          console.log(tagArrays);
-          let tags: string[] = [];
-
-          for (let tagArray of tagArrays)
-          {
-            tags.push(...tagArray);
-          }
-          console.log(tags);
-
-          this.issueTags = [...new Set(tags.sort())]; // makes tags unique and sorted
-          console.log(this.issueTags);
-
-          // Build the query object to be passed in the payload of the request to the /issues/searches end-point
-          this.queryObject["creator"]["$in"] = [...this.issueCreators];
-          this.queryObject["issueType"]["$in"] = [...this.issueTypes];
-          //this.queryObject["state"]["$in"] = [...this.issueStates];
-          //this.queryObject["tags"]["$in"] = [...this.issueTags];
-
-          console.log(this.issues);
-          console.log(this.issuePoints);},
-        //error: err => this.errorMessage = err
-    });
-  } */
 
   /**
    * Method which gets all issues and fill the table and select in with the issues' attributes values
@@ -652,12 +544,6 @@ export class IssueListComponent implements OnInit {
    */
   isStaff(): boolean
   {
-/*     this.auth.isStaff().subscribe({
-      next: (isStaff) => isStaff,
-      error: (err) => {
-        console.warn(`Could not determine if current user has staff permissions: ${err.message}`);
-      },
-    }); */
     return this.currentUser.roles.includes('staff');
   }
 
@@ -667,11 +553,5 @@ export class IssueListComponent implements OnInit {
   isAuthor(creator: User): boolean
   {
     return this.currentUser.id === creator.id;
-/*     this.auth.getUser().subscribe({
-      next: (user) => {console.log(user); return user.id === creator.id},
-      error: (err) => {
-        console.warn(`Could not determine if current user is creator of issue: ${err.message}`);
-      },
-    }); */
   }
 }
