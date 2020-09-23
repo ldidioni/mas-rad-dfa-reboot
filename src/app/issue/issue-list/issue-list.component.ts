@@ -33,7 +33,8 @@ export class IssueListComponent implements OnInit {
 
   issues: Issue[];
   totalNbOfPages: number;
-  currentPage: number;
+  totalNbOfIssues: number;
+  currentNbOfIssues: number;
   issuePoints: Point[];
   displayedColumns: string[] = ['creator', 'type', 'state', 'description', 'assignee', 'createdAt', 'updatedAt', 'details', 'editIssue', 'deleteIssue'];
 
@@ -68,7 +69,8 @@ export class IssueListComponent implements OnInit {
     this.issuePoints = [];
     this.issueTypes = [];
     this.issueCreators = [];
-    this.currentPage = 0;
+    this.totalNbOfIssues = 0;
+    this.currentNbOfIssues = 0;
     this.issueTypeObjects = [];
     this.issueCreatorObjects = [];
     this.states = [];
@@ -166,6 +168,7 @@ export class IssueListComponent implements OnInit {
     // To populate the issue type select
     if(this.initialFetch)
     {
+      this.totalNbOfIssues = this.issues.length;
       this.issueTypeObjects.push(...issues.map((issue: Issue) => issue.issueType));
       this.issueTypeObjects = this.issueTypeObjects.sort(compareNames); // sorts alphabetically
 
@@ -252,14 +255,15 @@ export class IssueListComponent implements OnInit {
     }
 
     if(this.issuesFilterForm.get("tags").value.length > 0)
-      {
-        console.log(this.issues);
-        this.issues = this.issues.filter(issue => issue.tags.some(tag => this.issuesFilterForm.get("tags").value.indexOf(tag) !== -1));
-        this.issues = this.issues.slice();  // Force change detection by triggering a change of reference
-        this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
-        this.issuePoints = this.issuePoints.slice();
-        console.log(this.issues);
-      }
+    {
+      console.log(this.issues);
+      this.issues = this.issues.filter(issue => issue.tags.some(tag => this.issuesFilterForm.get("tags").value.indexOf(tag) !== -1));
+      this.issues = this.issues.slice();  // Force change detection by triggering a change of reference
+      this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
+      this.issuePoints = this.issuePoints.slice();
+      console.log(this.issues);
+    }
+    this.currentNbOfIssues = this.issues.length;
   }
 
   /**
