@@ -11,11 +11,14 @@ import { MessagingService } from 'src/app/shared/services/messaging.service';
 /**
  * Function that sorts strings (used for options in select)
  */
-function compareNames(objectA: any, objectB: any) {
-  if (objectA.name < objectB.name){
+function compareNames(objectA: any, objectB: any)
+{
+  if (objectA.name < objectB.name)
+  {
     return -1;
   }
-  if (objectA.name > objectB.name){
+  if (objectA.name > objectB.name)
+  {
     return 1;
   }
   return 0;
@@ -24,13 +27,14 @@ function compareNames(objectA: any, objectB: any) {
 /**
  * Issue list page
  */
-@Component({
+@Component(
+{
   selector: 'app-issue-list',
   templateUrl: './issue-list.component.html',
   styleUrls: ['./issue-list.component.scss']
 })
-export class IssueListComponent implements OnInit {
-
+export class IssueListComponent implements OnInit
+{
   issues: Issue[];
   totalNbOfPages: number;
   totalNbOfIssues: number;
@@ -83,18 +87,18 @@ export class IssueListComponent implements OnInit {
   {
     this.initialFetch = true;
     // Get the current user and assigns it to the dedicated instance variable for permissions checking
-    this.auth.getUser().subscribe({
+    this.auth.getUser().subscribe(
+    {
       next: (user) => this.currentUser = user,
-      error: (err) => {
-        console.warn(`Could not determine current user: ${err.message}`);
-      },
+      error: (err) => console.warn(`Could not determine current user: ${err.message}`)
     });
 
     // Get all issues and populate instance variable with fetched data
     this.getAllIssues();
 
     // Create a form to store the different filters
-    this.issuesFilterForm = this.formBuilder.group({
+    this.issuesFilterForm = this.formBuilder.group(
+    {
       issueTypes:  '',
       issueCreators:  '',
       issueStates: '',
@@ -103,15 +107,16 @@ export class IssueListComponent implements OnInit {
     });
 
     // Create a form to store the free search field
-    this.issuesSearchForm = this.formBuilder.group({
+    this.issuesSearchForm = this.formBuilder.group(
+    {
       query:  ''
     });
 
     // The query object to be passed in the payload of the request to the /issues/searches end-point
-    this.queryObject = {issueType: {"$in": [ ]},
-                        creator: {"$in": [ ]},
-                        state: {"$in": [ ]}
-                      };
+    this.queryObject = { issueType: {"$in": [ ]},
+                         creator: {"$in": [ ]},
+                         state: {"$in": [ ]}
+                       };
 
     this.onChanges();
   }
@@ -126,20 +131,21 @@ export class IssueListComponent implements OnInit {
 
     this.issueService.getTotalNumberOfPages()
       .subscribe(nb =>
-        {
-          this.totalNbOfPages = nb;
-          console.log('NbOfPages = ' + this.totalNbOfPages);
+      {
+        this.totalNbOfPages = nb;
+        console.log('NbOfPages = ' + this.totalNbOfPages);
 
-          for(let index = 1 ; index <= this.totalNbOfPages ; index++)
+        for(let index = 1 ; index <= this.totalNbOfPages ; index++)
+        {
+          this.obs.push(this.issueService.loadIssuesWithDetailsForPageOfIndex(index));
+        }
+        concat(...this.obs)
+          .subscribe(
           {
-            this.obs.push(this.issueService.loadIssuesWithDetailsForPageOfIndex(index));
-          }
-          concat(...this.obs)
-            .subscribe({
-              next: (issues: Issue[]) => this.processIssues(issues),
-              error: () => this.messagingService.open('Could not fetch issues!')
+            next: (issues: Issue[]) => this.processIssues(issues),
+            error: () => this.messagingService.open('Could not fetch issues!')
           });
-        });
+      });
   }
 
   resetAll()
@@ -174,13 +180,14 @@ export class IssueListComponent implements OnInit {
 
       // Eliminate duplicate issue type entries based on their name attribute
       this.issueTypeObjects = Object.values(
-        this.issueTypeObjects.reduce( (c, e) => {
+        this.issueTypeObjects.reduce( (c, e) =>
+        {
           if (!c[e.name]) c[e.name] = e;
           return c;
         }, {})
       );
 
-      console.log(this.issueTypeObjects);
+      //console.log(this.issueTypeObjects);
 
       // Collect all issue type IDs to perform original query for issues without any filtering
       for(let issueTypeObject of this.issueTypeObjects)
@@ -190,7 +197,7 @@ export class IssueListComponent implements OnInit {
       this.issueTypes = [...new Set(this.issueTypes)];
       this.issueTypes = this.issueTypes.slice();  // Force change detection by triggering a change of reference
 
-      console.log(this.issueTypes);
+      //console.log(this.issueTypes);
 
       // To populate creator filter (search type)
       this.issueCreatorObjects.push(...issues.map((issue: Issue) => issue.creator));
@@ -199,13 +206,14 @@ export class IssueListComponent implements OnInit {
 
       // Eliminate duplicate issue creator entries based on their name attribute
       this.issueCreatorObjects = Object.values(
-        this.issueCreatorObjects.reduce( (c, e) => {
+        this.issueCreatorObjects.reduce( (c, e) =>
+        {
           if (!c[e.name]) c[e.name] = e;
           return c;
         }, {})
       );
 
-      console.log(this.issueCreatorObjects);
+      //console.log(this.issueCreatorObjects);
 
       // Collect all issue creator IDs to perform original query for issues without any filtering
       for(let issueCreatorObject of this.issueCreatorObjects)
@@ -216,7 +224,7 @@ export class IssueListComponent implements OnInit {
       // Eliminate duplicate issue creator IDs
       this.issueCreators = [...new Set(this.issueCreators)];
 
-      console.log(this.issueCreators);
+      //console.log(this.issueCreators);
 
       // To populate issue state filter
       this.states.push(...issues.map((issue: Issue) => issue.state));
@@ -225,18 +233,18 @@ export class IssueListComponent implements OnInit {
 
       // To populate issue tags filter
       let tagArrays = issues.map((issue: Issue) => issue.tags);
-      console.log(tagArrays);
+      //console.log(tagArrays);
 
       for (let tagArray of tagArrays)
       {
         this.tags.push(...tagArray);
       }
-      console.log(this.tags);
+      //console.log(this.tags);
 
       this.issueTags = [...new Set(this.tags.sort())]; // makes tags unique and sorted
       this.issueTags = this.issueTags.slice();
 
-      console.log(this.issueTags);
+      //console.log(this.issueTags);
 
       // Build the query object to be passed in the payload of the request to the /issues/searches end-point
       this.queryObject["creator"]["$in"] = [...this.issueCreators];
@@ -250,19 +258,20 @@ export class IssueListComponent implements OnInit {
       this.issues = this.issues.filter(issue => issue.description.includes(this.searchString));
       this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
       this.issuePoints = this.issuePoints.slice();
-      console.log(this.issues);
-      console.log(this.issuePoints);
+      //console.log(this.issues);
+      //console.log(this.issuePoints);
     }
 
     if(this.issuesFilterForm.get("tags").value.length > 0)
     {
-      console.log(this.issues);
+      //console.log(this.issues);
       this.issues = this.issues.filter(issue => issue.tags.some(tag => this.issuesFilterForm.get("tags").value.indexOf(tag) !== -1));
       this.issues = this.issues.slice();  // Force change detection by triggering a change of reference
       this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
       this.issuePoints = this.issuePoints.slice();
-      console.log(this.issues);
+      //console.log(this.issues);
     }
+
     this.currentNbOfIssues = this.issues.length;
   }
 
@@ -272,23 +281,21 @@ export class IssueListComponent implements OnInit {
    */
   onChanges(): void
   {
-    this.issuesFilterForm.valueChanges.subscribe(settings => {
-
+    this.issuesFilterForm.valueChanges.subscribe(settings =>
+    {
+      // The forthcoming fetch of the issues does not correspond to the initial fetch because it was triggered by manipulating
+      // one of the filters. We toggle this boolean in order not to restrict the filters options to a subset of all existing options.
       this.initialFetch = false;
 
-      console.log(settings.issueTypes);
-      console.log(settings.issueCreators);
       // No issue types selected
       if(!settings.issueTypes || settings.issueTypes.length === 0)
       {
         this.queryObject["issueType"]["$in"] = [...this.issueTypes];
-        //console.log("no filtering");
       }
       // Some issue types selected
       else
       {
         this.queryObject["issueType"]["$in"] = [...settings.issueTypes];
-        //console.log("filtering!!!");
       }
       // No creators selected
       if(!settings.issueCreators || settings.issueCreators.length === 0)
@@ -321,11 +328,13 @@ export class IssueListComponent implements OnInit {
    */
   search()
   {
+    // The forthcoming fetch of the issues does not correspond to the initial fetch because it was triggered by inputting
+    // a query string. We toggle this boolean in order not to restrict the filters options to a subset of all existing options.
     this.initialFetch = false;
 
     this.resetAll();
 
-    console.log(this.issues);
+    //console.log(this.issues);
     this.searchString = this.issuesSearchForm.get('query').value;
 
     // trigger a fresh request to the /issues/searches end-point, then filter the issues to keep those
@@ -334,17 +343,18 @@ export class IssueListComponent implements OnInit {
       .subscribe(nb =>
         {
           this.totalNbOfPages = nb;
-          console.log('NbOfPages = ' + this.totalNbOfPages);
+          //console.log('NbOfPages = ' + this.totalNbOfPages);
 
           for(let index = 1 ; index <= this.totalNbOfPages ; index++)
           {
             this.obs.push(this.issueService.searchIssuesForPageOfIndex(this.queryObject, index));
           }
           concat(...this.obs)
-            .subscribe({
+            .subscribe(
+            {
               next: (issues: Issue[]) => this.processIssues(issues),
               error: () => this.messagingService.open('Could not fetch issues!')
-          });
+            });
         });
   }
 
@@ -355,7 +365,8 @@ export class IssueListComponent implements OnInit {
   {
     this.issueService.deleteIssue(id).subscribe({
       next: () => this.getAllIssues(),
-      error: (err) => {
+      error: (err) =>
+      {
         this.messagingService.open('Could not delete issue!')
         console.warn(`Could not delete issue: ${err.message}`);
       },

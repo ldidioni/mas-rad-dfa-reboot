@@ -87,7 +87,7 @@ export class MapComponent implements OnDestroy {
       this.markers = [];
 
       this.mapPoints = changes.mapPoints.currentValue;
-      console.log(changes.mapPoints.currentValue);
+      //console.log(changes.mapPoints.currentValue);
       //this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
       let i = 1;
       this.mapPoints.forEach((point) => {
