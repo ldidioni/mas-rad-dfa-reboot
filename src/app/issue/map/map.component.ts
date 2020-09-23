@@ -91,11 +91,11 @@ export class MapComponent implements OnDestroy {
       //this.mapPoints.forEach((point) => this.buildMarker(point).addTo(this.map));
       let i = 1;
       this.mapPoints.forEach((point) => {
-        console.log(i++);
+        //console.log(i++);
         let marker = this.buildMarker(point)
         marker.addTo(this.map);
         this.markers.push(marker);
-        console.log(this.markers);
+        //console.log(this.markers);
       });
     }
   }
