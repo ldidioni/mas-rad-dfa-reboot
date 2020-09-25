@@ -364,10 +364,13 @@ export class IssueListComponent implements OnInit
   deleteIssue(id: string)
   {
     this.issueService.deleteIssue(id).subscribe({
-      next: () => this.search(),
-      error: (err) =>
+      next: () =>
       {
         this.totalNbOfIssues--;
+        this.search();
+      },
+      error: (err) =>
+      {
         this.messagingService.open('Could not delete issue!');
         console.warn(`Could not delete issue: ${err.message}`);
       },
