@@ -148,6 +148,9 @@ export class IssueListComponent implements OnInit
       });
   }
 
+  /**
+   * Method which clears the observables, issues and issue point arrays before fetching issues (again)
+   */
   resetAll()
   {
     this.obs = [];
@@ -159,17 +162,16 @@ export class IssueListComponent implements OnInit
     //this.issueStates = [];
     //this.issueTags = [];
   }
+
   /**
    * Method which processes the fetched issues and populate instance variable with respective data
    */
   processIssues(issues: Issue[])
   {
     this.issues.push(...issues);
-    this.issues = this.issues.slice();  // Force change detection by triggering a change of reference
 
     // For sake of displaying the markers on the map
     this.issuePoints.push(...issues.map((issue: Issue) => new Point(issue.location.coordinates)));
-    this.issuePoints = this.issuePoints.slice();
 
     // To populate the issue type select
     if(this.initialFetch)
@@ -195,14 +197,13 @@ export class IssueListComponent implements OnInit
         this.issueTypes.push(issueTypeObject.id);
       }
       this.issueTypes = [...new Set(this.issueTypes)];
-      this.issueTypes = this.issueTypes.slice();  // Force change detection by triggering a change of reference
+
 
       //console.log(this.issueTypes);
 
       // To populate creator filter (search type)
       this.issueCreatorObjects.push(...issues.map((issue: Issue) => issue.creator));
       this.issueCreatorObjects = this.issueCreatorObjects.sort(compareNames); // sorts alphabetically
-      this.issueCreatorObjects = this.issueCreatorObjects.slice();
 
       // Eliminate duplicate issue creator entries based on their name attribute
       this.issueCreatorObjects = Object.values(
@@ -229,7 +230,6 @@ export class IssueListComponent implements OnInit
       // To populate issue state filter
       this.states.push(...issues.map((issue: Issue) => issue.state));
       this.issueStates = [...new Set(this.states.sort())]; // makes states unique and sorted
-      this.issueStates = this.issueStates.slice();
 
       // To populate issue tags filter
       let tagArrays = issues.map((issue: Issue) => issue.tags);
@@ -242,7 +242,6 @@ export class IssueListComponent implements OnInit
       //console.log(this.tags);
 
       this.issueTags = [...new Set(this.tags.sort())]; // makes tags unique and sorted
-      this.issueTags = this.issueTags.slice();
 
       //console.log(this.issueTags);
 
@@ -257,7 +256,7 @@ export class IssueListComponent implements OnInit
     {
       this.issues = this.issues.filter(issue => issue.description.includes(this.searchString));
       this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
-      this.issuePoints = this.issuePoints.slice();
+
       //console.log(this.issues);
       //console.log(this.issuePoints);
     }
@@ -266,11 +265,19 @@ export class IssueListComponent implements OnInit
     {
       //console.log(this.issues);
       this.issues = this.issues.filter(issue => issue.tags.some(tag => this.issuesFilterForm.get("tags").value.indexOf(tag) !== -1));
-      this.issues = this.issues.slice();  // Force change detection by triggering a change of reference
+
       this.issuePoints = this.issues.map((issue: Issue) => new Point(issue.location.coordinates));
-      this.issuePoints = this.issuePoints.slice();
+
       //console.log(this.issues);
     }
+
+    // Force change detection by triggering a change of reference
+    this.issues = this.issues.slice();
+    this.issuePoints = this.issuePoints.slice();
+    this.issueTypes = this.issueTypes.slice();
+    this.issueCreatorObjects = this.issueCreatorObjects.slice();
+    this.issueStates = this.issueStates.slice();
+    this.issueTags = this.issueTags.slice();
 
     this.currentNbOfIssues = this.issues.length;
   }
