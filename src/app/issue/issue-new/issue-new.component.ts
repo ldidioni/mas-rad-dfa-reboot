@@ -123,27 +123,28 @@ export class IssueNewComponent implements OnInit
 
   /**
    * Method called upon pressing one of the defined separator keys in the mat-chip element
+   * https://www.dev6.com/angular/angular-material-chips-with-reactive-forms-and-custom-validation/
    */
   addTag(event: MatChipInputEvent)
   {
     const input = event.input;
     const value = event.value;
     if ((value.trim() !== '')) {
-      this.newIssueForm.controls['tags'].setErrors(null);   // 1
-      const tempEmails = this.newIssueForm.controls['tags'].value; // 2
+      this.newIssueForm.controls['tags'].setErrors(null);
+      const tempEmails = this.newIssueForm.controls['tags'].value;
       tempEmails.push(value.trim());
-      this.newIssueForm.controls['tags'].setValue(tempEmails);     // 3
-      if (this.newIssueForm.controls['tags'].valid) {              // 4
+      this.newIssueForm.controls['tags'].setValue(tempEmails);
+      if (this.newIssueForm.controls['tags'].valid) {
         this.newIssueForm.controls['tags'].markAsDirty();
-        input.value = '';                                    // 5
+        input.value = '';
       } else {
         const index = this.newIssueForm.controls['tags'].value.findIndex(value1 => value1 === value.trim());
         if (index !== -1) {
-          this.newIssueForm.controls['tags'].value.splice(index, 1);           // 6
+          this.newIssueForm.controls['tags'].value.splice(index, 1);
         }
       }
     } else {
-      this.newIssueForm.controls['tags'].updateValueAndValidity();  // 7
+      this.newIssueForm.controls['tags'].updateValueAndValidity();
     }
   }
 
