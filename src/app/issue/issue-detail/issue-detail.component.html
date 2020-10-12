@@ -1,105 +1,112 @@
 <div class="card">
-    <div class="card-header"
-        *ngIf="issue">
-        {{'Issue #' + issue.id }}
-    </div>
+  <div class="card-header"
+      *ngIf="issue">
+      {{'Issue #' + issue.id }}
+  </div>
 
-    <div class="card-body"
-        *ngIf="issue">
+  <div class="card-body"
+      *ngIf="issue">
 
-        <div class="row">
+      <div class="row">
 
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-2">Description:</div>
-                    <div class="col-10">{{issue.description}}</div>
-                </div>
-                <div *ngIf="issue.issueType" class="row">
-                    <div class="col-2">Type:</div>
-                    <div class="col-10">{{issue.issueType.name | hyphenToSpace}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-2">State:</div>
-                    <div class="col-10">{{issue.state}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-2">Creation:</div>
-                    <div class="col-10">{{issue.createdAt | date: 'mediumDate'}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-2">Updated:</div>
-                    <div class="col-10">{{issue.updatedAt | date: 'mediumDate'}}</div>
-                </div>
-                <div *ngIf="issue.creator" class="row">
-                    <div class="col-2">Creator:</div>
-                    <div class="col-10">{{issue.creator.name}}</div>
-                </div>
-                <div *ngIf="issue.assignee" class="row">
-                    <div class="col-2">Assignee:</div>
-                    <div class="col-10">{{issue.assignee.name}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-2">Tags:</div>
-                    <div class="col-10">{{issue.tags}}</div>
-                </div>
-            </div>
-            <div class="container">
+          <div class="col-12">
               <div class="row">
-                <div class="col">
-                  <mat-card class="col-4"
-                      *ngIf="issue.imageUrl">
-                    <a
-                      style="cursor: pointer"
-                      (click)="openModal(issue.imageUrl)">
-                      <img class="center-block img-responsive"
-                        [style.height.px]="150"
-                        [style.margin.px]="2"
-                        [src]="issue.imageUrl">
-                    </a>
-                  </mat-card>
+                  <div class="col-2">Description:</div>
+                  <div class="col-10">{{issue.description}}</div>
+              </div>
+              <div *ngIf="issue.issueType" class="row">
+                  <div class="col-2">Type:</div>
+                  <div class="col-10">{{issue.issueType.name | hyphenToSpace}}</div>
+              </div>
+              <div class="row">
+                  <div class="col-2">State:</div>
+                  <div class="col-10">{{issue.state}}</div>
+              </div>
+              <div class="row">
+                  <div class="col-2">Creation:</div>
+                  <div class="col-10">{{issue.createdAt | date: 'mediumDate'}}</div>
+              </div>
+              <div class="row">
+                  <div class="col-2">Updated:</div>
+                  <div class="col-10">{{issue.updatedAt | date: 'mediumDate'}}</div>
+              </div>
+              <div *ngIf="issue.creator" class="row">
+                  <div class="col-2">Creator:</div>
+                  <div class="col-10">{{issue.creator.name}}</div>
+              </div>
+              <div *ngIf="issue.assignee" class="row">
+                  <div class="col-2">Assignee:</div>
+                  <div class="col-10">{{issue.assignee.name}}</div>
+              </div>
+              <div class="row">
+                  <div class="col-2">Tags:</div>
+                  <div class="col-10">{{issue.tags}}</div>
+              </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <mat-card class="col-4"
+                    *ngIf="issue.imageUrl">
+                  <a
+                    style="cursor: pointer"
+                    (click)="openModal(issue.imageUrl)">
+                    <img class="center-block img-responsive"
+                      [style.height.px]="150"
+                      [style.margin.px]="2"
+                      [src]="issue.imageUrl">
+                  </a>
+                </mat-card>
 
-                  <mat-card class="col-4"
-                      *ngFor="let imageUrl of issue.additionalImageUrls">
-                    <a
-                      style="cursor: pointer"
-                      (click)="openModal(imageUrl)">
-                      <img class="center-block img-responsive"
-                        [style.height.px]="150"
-                        [style.margin.px]="2"
-                        [src]="imageUrl">
-                    </a>
-                  </mat-card>
-                </div>
+                <mat-card class="col-4"
+                    *ngFor="let imageUrl of issue.additionalImageUrls">
+                  <a
+                    style="cursor: pointer"
+                    (click)="openModal(imageUrl)">
+                    <img class="center-block img-responsive"
+                      [style.height.px]="150"
+                      [style.margin.px]="2"
+                      [src]="imageUrl">
+                  </a>
+                </mat-card>
               </div>
             </div>
+          </div>
+    </div>
+
+    <app-map [mapPoints]="issuePoint" [clickable]="false"></app-map>
+
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">
+      Comments
+  </div>
+  <div class="card body">
+    <div *ngFor="let comment of comments" class="card border-light mb-3">
+      <div class="card-body text-dark">
+        <h5 class="card-title">{{ comment.author.name }} on {{ comment.createdAt | date: 'mediumDate' }}</h5>
+        <p class="card-text">{{ comment.text }}</p>
       </div>
-
-      <app-map [mapPoints]="issuePoint" [clickable]="false"></app-map>
-
     </div>
-
-  </div>
-  <div *ngFor="let comment of comments" class="card-body">
-    <div>{{ comment.author.name }}</div>
-    <div>{{ comment.createdAt | date: 'mediumDate' }}</div>
-    <div>{{ comment.text }}</div>
-  </div>
-  <form #newCommentForm="ngForm" (submit)="submitComment(newCommentForm)">
-    <mat-form-field>
-      <mat-label for="newCommentReq">Your comment</mat-label>
-      <input matInput
-        type="text"
-        name="newCommentReq"
-        id="newCommentReq"
-        #newCommentField="ngModel"
-        required
-        [(ngModel)]="newCommentReq.text"
-      />
-      <mat-error *ngIf="newCommentField.hasError('required') && newCommentField.touched">
-        Please enter a comment.
-      </mat-error>
-    </mat-form-field>
-    <div>
-      <button mat-raised-button color="primary" type="submit" [disabled]="newCommentForm.invalid">Submit comment</button>
-    </div>
-</form>
+    <form #newCommentForm="ngForm" (submit)="submitComment(newCommentForm)" class="card-footer">
+      <mat-form-field>
+        <mat-label for="newCommentReq">Your comment</mat-label>
+        <input matInput
+          type="text"
+          name="newCommentReq"
+          id="newCommentReq"
+          #newCommentField="ngModel"
+          required
+          [(ngModel)]="newCommentReq.text"
+        />
+        <mat-error *ngIf="newCommentField.hasError('required') && newCommentField.touched">
+          Please enter a comment.
+        </mat-error>
+      </mat-form-field>
+      <div class="mb-3">
+        <button mat-raised-button color="primary" type="submit" [disabled]="newCommentForm.invalid">Submit comment</button>
+      </div>
+  </form>
+</div>
